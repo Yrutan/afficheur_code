@@ -78,9 +78,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="couleur_code.cpp" />
     <ClCompile Include="css.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="structure.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
