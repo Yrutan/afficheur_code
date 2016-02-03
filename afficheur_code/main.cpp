@@ -8,10 +8,7 @@
 #include <string>
 #include <vector>
 #include <map>
-
 #include <algorithm>
-
-
 #include<fstream>
 #include <iostream>
 using namespace std;
