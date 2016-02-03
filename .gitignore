@@ -280,3 +280,7 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 afficheur_code.VC.opendb
+afficheur_code/afficheur_code.vcxproj
+afficheur_code/afficheur_code.vcxproj.filters
+afficheur_code/afficheur_code.vcxproj
+*.filters
