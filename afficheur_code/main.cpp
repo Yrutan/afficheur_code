@@ -30,8 +30,9 @@ int main( int argc, char * argv[] )
 	bool couleur_code = false;
 	bool fichier_statistique = false;
 
+	/*On a pas besoin de les lignes suivantes je me trompe ?
 	// le premier paramètre est le nom de l'exécutable
-	string nom_programme = argv[0];
+	string nom_programme = argv[0];*/
 
 	vector<string> noms_fichiers;
 	vector<string> textes_fichiers;
