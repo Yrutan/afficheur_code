@@ -63,6 +63,11 @@ int main( int argc, char * argv[] )
 			}
 		}
 	}
+
+
+	cout << couleur_code << endl;
+	cout << fichier_statistique << endl;
+
 	/*
 		 pour les fichiers qui existent : 
 		 - ouvrir le fichier et lire le contenu
@@ -105,11 +110,11 @@ int main( int argc, char * argv[] )
 	ofstream ecrire_fichier;
 	for (auto it = begin(noms_fichiers); it != end(noms_fichiers); it++)
 	{
-		ecrire_fichier.open(*it);
+		ecrire_fichier.open(*it + ".html");
 		if (ecrire_fichier.is_open())
 		{
 			// écrit le texte dans le fichier, endl indique la fin d'une ligne
-			ecrire_fichier << "output" << endl;
+			ecrire_fichier << "output " + *it << endl;
 		}
 		ecrire_fichier.close();
 	}
