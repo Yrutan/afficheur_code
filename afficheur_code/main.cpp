@@ -110,7 +110,7 @@ int main( int argc, char * argv[] )
 	ofstream ecrire_fichier;
 	for (auto it = begin(noms_fichiers); it != end(noms_fichiers); it++)
 	{
-		ecrire_fichier.open(*it + ".html");
+		ecrire_fichier.open("../../" + *it + ".html");
 		if (ecrire_fichier.is_open())
 		{
 			// écrit le texte dans le fichier, endl indique la fin d'une ligne
