@@ -19,8 +19,22 @@ using namespace std;
 const string COULEUR_CODE = "-couleur";
 const string STATISTIQUE = "-stats";
 
+// Non utilisé pour l'instant donc pas nécessaire ?
 const string DEFAULT_FILE = "default.cpp";
 
+void generer_stats(const string nom_fichier)
+{
+	map<string, int> donnees;
+	ifstream in{ nom_fichier };
+
+	// Il faut faire une expression régulière pour filtrer ce que l'on met dans donnees
+	for (string s; in >> s;)
+		donnees[s]++;
+
+	// PAS ENCORE FINI 
+}
+
+// Fonction utilisée pour vérifier l'existence d'un fichier
 // Ouvrir le fichier et le convertir en booléen
 bool fichier_existe(const string &nom)
 {
