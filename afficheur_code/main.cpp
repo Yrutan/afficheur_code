@@ -21,9 +21,11 @@ const string STATISTIQUE = "-stats";
 
 const string DEFAULT_FILE = "default.cpp";
 
-
-
-
+// Ouvrir le fichier et le convertir en booléen
+bool fichier_existe(const string &nom)
+{
+	return !!(ifstream{ nom });
+}
 
 int main( int argc, char * argv[] )
 {
@@ -55,16 +57,16 @@ int main( int argc, char * argv[] )
 			}
 			else // c'est un fichier
 			{
-				/*
-					à faire avant ou après :
-					- vérifier si tous les fichiers existent 
-				*/
-				noms_fichiers.push_back(arg);
+				// Fonctionne !
+				if (fichier_existe(arg))
+					noms_fichiers.push_back(arg);
+				else
+					cout << "Le fichier " << arg << " n'existe pas !" << endl;
 			}
 		}
 	}
 
-
+	// Code de test pour s'assurer que les options sont prises en compte
 	cout << couleur_code << endl;
 	cout << fichier_statistique << endl;
 
@@ -110,7 +112,8 @@ int main( int argc, char * argv[] )
 	ofstream ecrire_fichier;
 	for (auto it = begin(noms_fichiers); it != end(noms_fichiers); it++)
 	{
-		ecrire_fichier.open("../../" + *it + ".html");
+		// ../../ ne change rien... cela écrit toujours dans le fichier courant
+		ecrire_fichier.open(*it + ".html");
 		if (ecrire_fichier.is_open())
 		{
 			// écrit le texte dans le fichier, endl indique la fin d'une ligne
