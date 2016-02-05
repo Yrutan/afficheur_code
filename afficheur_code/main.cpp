@@ -82,11 +82,11 @@ int main(int argc, char * argv[])
 			string arg = argv[i];
 			if (arg[0] == '-' || arg[0] == '/') // c'est une option
 			{
-				if (arg.compare(COULEUR_CODE))
+				if (arg == COULEUR_CODE)
 				{
 					couleur_code = true;
 				}
-				else if (arg.compare(STATISTIQUE))
+				else if (arg == STATISTIQUE)
 				{
 					fichier_statistique = true;
 				}
