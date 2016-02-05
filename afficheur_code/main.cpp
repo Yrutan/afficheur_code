@@ -103,6 +103,7 @@ int main(int argc, char * argv[])
 		 - ajouter du css si nécessaire
 		 - ensuite, ajouté le html pour faire du texte un document html valide (doctype, head, body, ect ...)
 		 - confirmer la fin de l'opération avec un message pour chaque fichier (opération terminée ou fichier introuvable)
+		 - réorganiser le main en fonctions pour éviter qu'il soit excessivement long
 	*/
 
 	ifstream lire_fichier;
