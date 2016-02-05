@@ -5,6 +5,10 @@
 *************************************************************************/
 
 
+#include "CSS.cpp"
+#include "keywords.cpp"
+#include "simon.cpp"
+
 #include <string>
 #include <vector>
 #include <map>
