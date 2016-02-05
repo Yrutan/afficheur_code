@@ -149,6 +149,10 @@
     <ClCompile Include="CSS.cpp" />
     <ClCompile Include="keywords.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="simon.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Styles.css" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

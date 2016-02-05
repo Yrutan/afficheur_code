@@ -133,6 +133,22 @@ int main(int argc, char * argv[])
 		if (couleur_code)
 		{
 			// ajouter le css au texte (à chaque ligne ?)
+         size_t index = 0;
+         for each (string keyword in liste)
+         {
+            //auto it = begin(texte_fichier); it != end(texte_fichier); ++it
+            for (int i = 0; i < texte_fichier.size; i++)
+            {
+
+               index = texte_fichier[i].find(keyword, index);
+
+               if (index == string::npos)break;
+               
+               string css_start;
+               string css_end;
+               texte_fichier[i].replace(index, keyword.length, css_start + keyword + css_end);
+            }
+         }
 		}
 
 		// ../../ ne change rien... cela écrit toujours dans le fichier courant
