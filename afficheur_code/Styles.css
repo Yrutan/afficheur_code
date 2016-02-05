@@ -1,0 +1,421 @@
+/*************************************************************************
+
+Fait par Antoine Latendresse, Léa Kelly et Simon Roy
+
+*************************************************************************/
+
+.alignas
+{
+    color:#69150a;
+}
+
+.alignof
+{
+    color:#3dabd8;
+}
+
+.and
+{
+    color:#f31f4c;
+}
+
+.and_eq
+{
+    color:#b36508;
+}
+
+.asm
+{
+    color:#cbd60d;
+}
+
+.auto
+{
+    color:#07773c;
+}
+
+.bitand
+{
+    color:#0d0145;
+}
+
+.bitor
+{
+    color:#912597;
+}
+
+.bool
+{
+    color:#223e39;
+}
+
+.break
+{
+    color:#ee3731;
+}
+
+.case
+{
+    color:#884001;
+}
+
+.catch
+{
+    color:#65fc02;
+}
+
+.char
+{
+    color:#56cab1;
+}
+
+.class
+{
+    color:#8cfba1;
+}
+
+.compl
+{
+    color:#23ea47;
+}
+
+.const
+{
+    color:#9e1771;
+}
+
+.constexpr
+{
+    color:#b7e11c;
+}
+
+.const_cast
+{
+    color:#6f2e22;
+}
+
+.continue
+{
+    color:#a9e9bc;
+}
+
+.decltype
+{
+    color:#c4be72;
+}
+
+.default
+{
+    color:#d5c1fb;
+}
+
+.delete
+{
+    color:#158503;
+}
+
+.do
+{
+    color:#726bb3;
+}
+
+.double
+{
+    color:#6cfc1b;
+}
+
+.dynamic_cast
+{
+    color:#af9822;
+}
+
+.else
+{
+    color:#f4e816;
+}
+
+.enum
+{
+    color:#90d895;
+}
+
+.explicit
+{
+    color:#3b495b;
+}
+
+.export
+{
+    color:#67ee5e;
+}
+
+.extern
+{
+    color:#42d289;
+}
+
+.false
+{
+    color:#4f6b76;
+}
+
+.float
+{
+    color:#a586c7;
+}
+
+.for
+{
+    color:#405f41;
+}
+
+.friend
+{
+    color:#e8e43f;
+}
+
+.goto
+{
+    color:#8d87fe;
+}
+
+.if
+{
+    color:#096c64;
+}
+
+.inline
+{
+    color:#824ff6;
+}
+
+.int
+{
+    color:#3ef902;
+}
+
+.long
+{
+    color:#1f6508;
+}
+
+.mutable
+{
+    color:#23b587;
+}
+
+.namespace
+{
+    color:#313ac8;
+}
+
+.new
+{
+    color:#aa486d;
+}
+
+.noexcept
+{
+    color:#fc6a80;
+}
+
+.not
+{
+    color:#087ed6;
+}
+
+.not_eq
+{
+    color:#4a494f;
+}
+
+.nullptr
+{
+    color:#9c0e07;
+}
+
+.operator
+{
+    color:#b1bf35;
+}
+
+.or
+{
+    color:#79be45;
+}
+
+.or_eq
+{
+    color:#c37965;
+}
+
+.private
+{
+    color:#b8d363;
+}
+
+.protected
+{
+    color:#5877e8;
+}
+
+.public
+{
+    color:#d19141;
+}
+
+.register
+{
+    color:#18051d;
+}
+
+.reinterpret_cast
+{
+    color:#7c5594;
+}
+
+.return
+{
+    color:#2feb0b;
+}
+
+.short
+{
+    color:#d114b6;
+}
+
+.signed
+{
+    color:#b9864a;
+}
+
+.sizeof
+{
+    color:#ec99d9;
+}
+
+.static
+{
+    color:#5319ce;
+}
+
+.static_assert
+{
+    color:#39110d;
+}
+
+.static_cast
+{
+    color:#f7ed1c;
+}
+
+.struct
+{
+    color:#c88d82;
+}
+
+.switch
+{
+    color:#172e08;
+}
+
+.template
+{
+    color:#dd2fe2;
+}
+
+.this
+{
+    color:#df3e0c;
+}
+
+.thread_local
+{
+    color:#75ac15;
+}
+
+.throw
+{
+    color:#f16bdb;
+}
+
+.true
+{
+    color:#1e406c;
+}
+
+.try
+{
+    color:#fb7252;
+}
+
+.typedef
+{
+    color:#c17686;
+}
+
+.typeid
+{
+    color:#2ee275;
+}
+
+.typename
+{
+    color:#a194ae;
+}
+
+.union
+{
+    color:#c4f922;
+}
+
+.unsigned
+{
+    color:#f529cf;
+}
+
+.using
+{
+    color:#e59502;
+}
+
+.virtual
+{
+    color:#14d8c1;
+}
+
+.void
+{
+    color:#7f1850;
+}
+
+.volatile
+{
+    color:#4b8fd2;
+}
+
+.wchar_t
+{
+    color:#f8bd35;
+}
+
+.while
+{
+    color:#e1cff8;
+}
+
+.xor
+{
+    color:#e91e24;
+}
+
+.xor_eq
+{
+    color:#1e9e10;
+}
+
+/*************************************************************************
+
+Fait par Antoine Latendresse, Léa Kelly et Simon Roy
+
+*************************************************************************/
