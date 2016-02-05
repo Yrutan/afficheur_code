@@ -34,14 +34,15 @@ void generer_stats(const string nom_fichier)
 	ofstream output;
 	output.open(nom_fichier + "_stats.txt");
 
-	for (auto & p : donnees)
+	if (output.is_open())
 	{
-		if (output.is_open())
+		for (auto & p : donnees)
 		{
 			output << p.first << " : " << p.second << endl;
 		}
-		output.close();
 	}
+
+	output.close();
 }
 
 // Fonction utilisée pour vérifier l'existence d'un fichier
@@ -122,7 +123,7 @@ int main(int argc, char * argv[])
 		lire_fichier.close();
 
 		if (fichier_statistique)
-			//generer_stats(*it);
+			generer_stats(*it);
 
 		if (couleur_code)
 		{
@@ -134,8 +135,7 @@ int main(int argc, char * argv[])
 		if (ecrire_fichier.is_open())
 		{
 			for (auto it_lecture = begin(texte_fichier); it_lecture != end(texte_fichier); it_lecture++)
-				// Le retour à la ligne ne marche pas ! J'ai essayé également avec "\n" et ça ne change rien.
-				ecrire_fichier << *it_lecture << endl;
+				ecrire_fichier << *it_lecture << "<br />";
 		}
 		ecrire_fichier.close();
 	}
