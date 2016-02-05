@@ -14,6 +14,7 @@
 #include <map>
 #include <algorithm>
 #include<fstream>
+#include <regex>
 #include <iostream>
 using namespace std;
 
@@ -22,18 +23,23 @@ using namespace std;
 
 const string COULEUR_CODE = "-couleur";
 const string STATISTIQUE = "-stats";
+const string REGEX = "[a-zA-Z0-9_]+";
 
 // Non utilisé pour l'instant donc pas nécessaire ?
-const string DEFAULT_FILE = "default.cpp";
+// const string DEFAULT_FILE = "default.cpp";
 
 void generer_stats(const string nom_fichier)
 {
+	string pattern{ "[a-zA-Z_]([a-zA-Z0-9_])*" };
+	regex expression{ pattern };
+
 	map<string, int> donnees;
 	ifstream in{ nom_fichier };
 
 	// Il faut faire une expression régulière pour filtrer ce que l'on met dans données
 	for (string s; in >> s;)
-		donnees[s]++;
+		if(regex_match(s, expression))
+			donnees[s]++;
 
 	ofstream output;
 	output.open(nom_fichier + "_stats.txt");
@@ -87,7 +93,6 @@ int main(int argc, char * argv[])
 			}
 			else // c'est un fichier
 			{
-				// Fonctionne !
 				if (fichier_existe(arg))
 					noms_fichiers.push_back(arg);
 				else
@@ -99,16 +104,6 @@ int main(int argc, char * argv[])
 	// Code de test pour s'assurer que les options sont prises en compte
 	cout << couleur_code << endl;
 	cout << fichier_statistique << endl;
-
-	/*
-		 pour les fichiers qui existent :
-		 - ouvrir le fichier et lire le contenu
-		 - faire les statistiques si nécessaire (en premier pour ne pas avoir le html dans le chemin)
-		 - ajouter du css si nécessaire
-		 - ensuite, ajouté le html pour faire du texte un document html valide (doctype, head, body, ect ...)
-		 - confirmer la fin de l'opération avec un message pour chaque fichier (opération terminée ou fichier introuvable)
-		 - réorganiser le main en fonctions pour éviter qu'il soit excessivement long
-	*/
 
 	ifstream lire_fichier;
 	ofstream ecrire_fichier;
@@ -137,7 +132,7 @@ int main(int argc, char * argv[])
          for each (string keyword in liste)
          {
             //auto it = begin(texte_fichier); it != end(texte_fichier); ++it
-            for (int i = 0; i < texte_fichier.size; i++)
+            for (int i = 0; i < texte_fichier.size(); i++)
             {
 
                index = texte_fichier[i].find(keyword, index);
@@ -146,7 +141,7 @@ int main(int argc, char * argv[])
                
                string css_start;
                string css_end;
-               texte_fichier[i].replace(index, keyword.length, css_start + keyword + css_end);
+               texte_fichier[i].replace(index, keyword.length(), css_start + keyword + css_end);
             }
          }
 		}
