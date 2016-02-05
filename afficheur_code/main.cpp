@@ -18,6 +18,15 @@
 #include <iostream>
 using namespace std;
 
+const string STYLE_BLEU = "color='#6495ED'"; // #6495ED Cornflowerblue
+const string BALISE_DEBUT = "<span >";
+const string BALISE_OUVERTURE = "<span ";
+const string BALISE_FERMETURE = " >";
+const string BALISE_FIN = "</span>";
+
+const string PLUS_PETIT = "&lt"; // <
+const string PLUS_GRAND = "&gt"; // >
+const string ESPERLUETTE = "&amp"; // &
 
 
 
@@ -102,8 +111,8 @@ int main(int argc, char * argv[])
 	}
 
 	// Code de test pour s'assurer que les options sont prises en compte
-	cout << couleur_code << endl;
-	cout << fichier_statistique << endl;
+	cout << "couleur : " << couleur_code << endl;
+	cout << "statistique : " << fichier_statistique << endl;
 
 	ifstream lire_fichier;
 	ofstream ecrire_fichier;

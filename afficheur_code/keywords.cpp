@@ -6,7 +6,6 @@ Fait par Antoine Latendresse, Léa Kelly et Simon Roy
 
 #include <string>
 #include <vector>
-#include <map>
 using namespace std;
 
 const vector<string> liste{

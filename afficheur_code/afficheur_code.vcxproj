@@ -146,7 +146,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CSS.cpp" />
     <ClCompile Include="keywords.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="simon.cpp" />
