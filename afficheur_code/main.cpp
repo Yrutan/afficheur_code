@@ -93,7 +93,7 @@ bool fichier_existe(const string &nom)
 }
 
 template <class It>
-void creer_fichier_web(It it)
+void creer_fichier_web(It it, vector<string>texte)
 {
 	ecrire_fichier.open(*it + ".html");
 	if (ecrire_fichier.is_open())
@@ -207,7 +207,7 @@ int main(int argc, char * argv[])
 			ecrire_fichier.close();
 		}
 
-		creer_fichier_web(*it);
+		creer_fichier_web(*it, texte_fichier);
 	}
 }
 
