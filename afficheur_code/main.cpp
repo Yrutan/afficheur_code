@@ -34,6 +34,11 @@ const string REGEX = "[a-zA-Z0-9_]+";
 // Non utilisé pour l'instant donc pas nécessaire ?
 // const string DEFAULT_FILE = "default.cpp";
 
+bool compare(const pair<string, int>&i, const pair<string, int>&j)
+{
+	return i.second > j.second;
+}
+
 void generer_stats(const string nom_fichier)
 {
 	// La regex n'est pas encore finie... Elle fonctionne mais ne traite pas encore toutes les conditions demandées par le prof
@@ -52,18 +57,19 @@ void generer_stats(const string nom_fichier)
 
 	vector<pair<string, int>> stats;
 
+	// Sort ne marche malheuresment pas sur une map, il faut donc transférer
+	// les données dans un vector
 	for (auto & p : donnees)
-	{
-		// Il faut mettre les valeurs de donnees dans le vecteur de stats
-		stats.push_back(p.first, p.second);
-	}
+		stats.push_back(make_pair(p.first, p.second));
+
+	sort(stats.begin(), stats.end(), compare);
 
 	ofstream output;
 	output.open(nom_fichier + "_stats.txt");
 
 	if (output.is_open())
 	{
-		for (auto & p : donnees)
+		for (auto & p : stats)
 		{
 			output << p.first << " : " << p.second << endl;
 		}
