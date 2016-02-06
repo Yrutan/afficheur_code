@@ -57,6 +57,7 @@ bool compare(const pair<string, int>&i, const pair<string, int>&j)
 	return i.second > j.second;
 }
 
+/*
 // Pas eu le temps de finir
 template <class It>
 void ordre_lexico(It debut, It fin)
@@ -69,6 +70,7 @@ void ordre_lexico(It debut, It fin)
 		++prochain;
 	}
 }
+*/
 
 void generer_stats(const string nom_fichier)
 {
@@ -92,7 +94,7 @@ void generer_stats(const string nom_fichier)
 		stats.push_back(make_pair(p.first, p.second));
 
 	sort(stats.begin(), stats.end(), compare);
-	ordre_lexico(begin(stats), end(stats));
+	//ordre_lexico(begin(stats), end(stats));
 
 	ofstream output;
 	output.open(nom_fichier + "_stats.txt");
@@ -111,18 +113,18 @@ bool fichier_existe(const string &nom)
 	return !!(ifstream{ nom });
 }
 
-template <class It>
-void creer_fichier_web(It it, vector<string>texte)
+void creer_fichier_web(string nom_fichier, vector<string>texte)
 {
 	if (!empty(texte))
 	{
 		texte[0] = "<!DOCTYPE html> <title>Afficheur de code</title><pre>" + texte[0];
 		texte[texte.size() - 1] += "</pre>";
 	}
-	ecrire_fichier.open(*it + ".html");
+	ofstream ecrire_fichier;
+	ecrire_fichier.open(nom_fichier + ".html");
 	if (ecrire_fichier.is_open())
 	{
-		for (auto it_lecture = begin(texte_fichier); it_lecture != end(texte_fichier); it_lecture++)
+		for (auto it_lecture = begin(texte); it_lecture != end(texte); it_lecture++)
 			ecrire_fichier << *it_lecture << "<br />";
 	}
 	ecrire_fichier.close();
