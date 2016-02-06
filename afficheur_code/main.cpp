@@ -114,6 +114,11 @@ bool fichier_existe(const string &nom)
 template <class It>
 void creer_fichier_web(It it, vector<string>texte)
 {
+	if (!empty(texte))
+	{
+		texte[0] = "<!DOCTYPE html> <title>Afficheur de code</title><pre>" + texte[0];
+		texte[texte.size() - 1] += "</pre>";
+	}
 	ecrire_fichier.open(*it + ".html");
 	if (ecrire_fichier.is_open())
 	{
