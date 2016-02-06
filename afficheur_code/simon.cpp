@@ -2,42 +2,11 @@
 
 /*
 
-const string BALISE_DEBUT = "<span >";
-const string BALISE_FIN = "</span>";
-
-const string STYLE_BLEU = "style = 'color:blue'";
-const string OUVERTURE_BALISE = "<span ";
-const string FERMETURE_BALISE = " >";
-
-
-
-
-int index;
-for each (string keyword in liste)
+if ( !empty(texte_fichier))
 {
-for (int i = 0; i < texte_fichier.size(); i++)
-{
-index = 0;
-while (index == string::npos)
-{
-index = texte_fichier[i].find(keyword, index);
-if ( index != string::npos)
-{
-
-
-texte_fichier[i].replace(index, keyword.length(), OUVERTURE_BALISE + STYLE_BLEU + FERMETURE_BALISE + keyword + BALISE_FIN);
-index += OUVERTURE_BALISE.length() + STYLE_BLEU.length(); +FERMETURE_BALISE.length() + keyword.length() + BALISE_FIN.length();
-						}
-					}
-				}
-			}
-
-ecrire_fichier.open(*it + ".real.html");
-for each (string ligne in texte_fichier)
-{
-ecrire_fichier << ligne << endl;
+texte_fichier[0] = "<!DOCTYPE html> <title>Afficheur de code</title><pre>" + texte_fichier[0];
+texte_fichier[texte_fichier.size()-1] += "</pre>";
 }
-ecrire_fichier.close();
 
 
 */
