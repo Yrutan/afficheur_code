@@ -31,6 +31,7 @@ const map<string, string> sanitizer{
 	{ ">" , PLUS_GRAND },
 	{ "&" , ESPERLUETTE } 
 };
+
 /*
 void sanitizeString(string &ligne)
 {
@@ -52,14 +53,8 @@ const string COULEUR_CODE = "couleur";
 const string STATISTIQUE = "stats";
 const string REGEX = "[a-zA-Z0-9_]+";
 
-bool compare(const pair<string, int>&i, const pair<string, int>&j)
-{
-	return i.second > j.second;
-}
-
-/*
 // Pas eu le temps de finir
-template <class It>
+/*template <class It>
 void ordre_lexico(It debut, It fin)
 {
 	auto prochain = ++debut;
@@ -71,6 +66,11 @@ void ordre_lexico(It debut, It fin)
 	}
 }
 */
+
+bool compare(const pair<string, int>&i, const pair<string, int>&j)
+{
+	return i.second > j.second;
+}
 
 void generer_stats(const string nom_fichier)
 {
@@ -130,8 +130,6 @@ void creer_fichier_web(string nom_fichier, vector<string>texte)
 	ecrire_fichier.close();
 }
 
-
-
 void ajouter_css(vector<string> &lignes)
 {
 	int index;
@@ -166,9 +164,6 @@ int main(int argc, char * argv[])
 {
 	bool couleur_code = false;
 	bool fichier_statistique = false;
-
-	// le premier paramètre est le nom de l'exécutable
-	//string nom_programme = argv[0];
 
 	vector<string> noms_fichiers;
 
@@ -209,6 +204,9 @@ int main(int argc, char * argv[])
 
 	for (auto it = begin(noms_fichiers); it != end(noms_fichiers); it++)
 	{
+		// J'ai essayé de mettre la lecture dans une fonction à part, mais quand on lui
+		// envoyait une variable ifstream par paramètre, cela générait une erreur
+		// que je ne comprenais pas
 		lire_fichier.open(*it);
 		if (lire_fichier.is_open())
 		{
