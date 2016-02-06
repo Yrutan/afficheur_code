@@ -4,16 +4,13 @@
 
 *************************************************************************/
 
-
-#include "CSS.cpp"
 #include "keywords.cpp"
 #include "simon.cpp"
-
 #include <string>
 #include <vector>
 #include <map>
 #include <algorithm>
-#include<fstream>
+#include <fstream>
 #include <regex>
 #include <iostream>
 using namespace std;
@@ -39,16 +36,27 @@ const string REGEX = "[a-zA-Z0-9_]+";
 
 void generer_stats(const string nom_fichier)
 {
-	string pattern{ "[a-zA-Z_]([a-zA-Z0-9_])*" };
+	// La regex n'est pas encore finie... Elle fonctionne mais ne traite pas encore toutes les conditions demandées par le prof
+	// Il faut que chacune des données contienne au moins un caractère alphanumérique pour passer
+	// Il faudrait aussi peut-être séparer les ; ??
+	// Finalement, le prof dit qu'on n'est pas obliger de traiter les suffices comme U, UL, f
+	string pattern{ "[a-zA-Z0-9]+" };
 	regex expression{ pattern };
 
 	map<string, int> donnees;
 	ifstream in{ nom_fichier };
 
-	// Il faut faire une expression régulière pour filtrer ce que l'on met dans données
 	for (string s; in >> s;)
 		if(regex_match(s, expression))
 			donnees[s]++;
+
+	vector<pair<string, int>> stats;
+
+	for (auto & p : donnees)
+	{
+		// Il faut mettre les valeurs de donnees dans le vecteur de stats
+		stats.push_back(p.first, p.second);
+	}
 
 	ofstream output;
 	output.open(nom_fichier + "_stats.txt");
