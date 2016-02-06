@@ -152,24 +152,37 @@ int main(int argc, char * argv[])
 
 		if (couleur_code)
 		{
-			size_t index;
+			int index;
 			for each (string keyword in liste)
 			{
-				for each (string ligne in texte_fichier)
+				for (int i = 0; i < texte_fichier.size(); i++)
 				{
 					index = 0;
-					while (index != string::npos)
+					while (index == string::npos)
 					{
-						index = ligne.find(keyword, index);
-						if (ligne.find(keyword) != string::npos)
+						index = texte_fichier[i].find(keyword, index);
+						if ( index != string::npos)
 						{
-
-							ligne.replace(index, keyword.length(),
-								OUVERTURE_BALISE + STYLE_BLEU + FERMETURE_BALISE + keyword + BALISE_FIN);
+							/*
+							string ligne = texte_fichier[i];
+							texte_fichier[i] = ligne.substr(0, index - 1)
+								+ OUVERTURE_BALISE + STYLE_BLEU + FERMETURE_BALISE 
+								+ ligne.substr(index, index + keyword.length() ) + BALISE_FIN 
+								+ ligne.substr(index + keyword.length(), ligne.length() );
+							*/
+						
+							texte_fichier[i].replace(index, keyword.length(),OUVERTURE_BALISE + STYLE_BLEU + FERMETURE_BALISE + keyword + BALISE_FIN);
+							index += OUVERTURE_BALISE.length() + STYLE_BLEU.length(); +FERMETURE_BALISE.length() + keyword.length() + BALISE_FIN.length();
 						}
 					}
 				}
 			}
+			ecrire_fichier.open(*it + ".real.html");
+			for each (string ligne in texte_fichier)
+			{
+				ecrire_fichier << ligne << endl;
+			}
+			ecrire_fichier.close();
 		}
 
 		// ../../ ne change rien... cela écrit toujours dans le fichier courant
@@ -181,5 +194,6 @@ int main(int argc, char * argv[])
 		}
 		ecrire_fichier.close();
 	}
-
 }
+
+
