@@ -9,15 +9,16 @@
 #include <vector>
 #include <map>
 #include <algorithm>
-#include <fstream>
 #include <regex>
+#include <fstream>
 #include <iostream>
 using namespace std;
 
 const string BALISE_DEBUT = "<span >";
 const string BALISE_FIN = "</span>";
 
-const string STYLE_BLEU = "style = 'color:blue'";
+const string STYLE_BLEU = "class='.keyword'";
+const string STYLE_BLEU_CSS = "style = 'color:blue'";
 const string OUVERTURE_BALISE = "<span ";
 const string FERMETURE_BALISE = " >";
 
@@ -117,7 +118,7 @@ void creer_fichier_web(string nom_fichier, vector<string>texte)
 {
 	if (!empty(texte))
 	{
-		texte[0] = "<!DOCTYPE html> <title>Afficheur de code</title><pre>" + texte[0];
+		texte[0] = "<!DOCTYPE html><style>.keyword{color:blue;}</style> <title>Afficheur de code</title><pre>" + texte[0];
 		texte[texte.size() - 1] += "</pre>";
 	}
 	ofstream ecrire_fichier;
@@ -138,20 +139,20 @@ void ajouter_css(vector<string> &lignes)
 		for (int i = 0; i < lignes.size(); i++)
 		{
 			index = 0;
-			while (index == string::npos)
+			while (index != string::npos)
 			{
 				index = lignes[i].find(keyword, index);
 				if (index != string::npos)
 				{
-					/*
-					string ligne = texte_fichier[i];
-					texte_fichier[i] = ligne.substr(0, index - 1)
+					
+					string ligne = lignes[i];
+					lignes[i] = ligne.substr(0, index - 1)
 					+ OUVERTURE_BALISE + STYLE_BLEU + FERMETURE_BALISE
 					+ ligne.substr(index, index + keyword.length() ) + BALISE_FIN
 					+ ligne.substr(index + keyword.length(), ligne.length() );
-					*/
+					
 
-					lignes[i].replace(index, keyword.length(), OUVERTURE_BALISE + STYLE_BLEU + FERMETURE_BALISE + keyword + BALISE_FIN);
+					//lignes[i].replace(index, keyword.length(), OUVERTURE_BALISE + STYLE_BLEU + FERMETURE_BALISE + keyword + BALISE_FIN);
 					index += OUVERTURE_BALISE.length() + STYLE_BLEU.length() + FERMETURE_BALISE.length() + keyword.length() + BALISE_FIN.length();
 				}
 			}
@@ -198,7 +199,6 @@ int main(int argc, char * argv[])
 	cout << "statistique : " << fichier_statistique << endl;
 
 	ifstream lire_fichier;
-	ofstream ecrire_fichier;
 	vector<string> texte_fichier;
 	string ligne;
 
