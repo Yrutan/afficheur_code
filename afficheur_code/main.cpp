@@ -15,11 +15,13 @@
 #include <iostream>
 using namespace std;
 
-const string STYLE_BLEU = "color='#6495ED'"; // #6495ED Cornflowerblue
 const string BALISE_DEBUT = "<span >";
-const string BALISE_OUVERTURE = "<span ";
-const string BALISE_FERMETURE = " >";
 const string BALISE_FIN = "</span>";
+
+const string STYLE_BLEU = "style = 'color:blue'";
+const string OUVERTURE_BALISE = "<span ";
+const string FERMETURE_BALISE = " >";
+
 
 const string PLUS_PETIT = "&lt"; // <
 const string PLUS_GRAND = "&gt"; // >
@@ -150,23 +152,24 @@ int main(int argc, char * argv[])
 
 		if (couleur_code)
 		{
-			// ajouter le css au texte (à chaque ligne ?)
-         size_t index = 0;
-         for each (string keyword in liste)
-         {
-            //auto it = begin(texte_fichier); it != end(texte_fichier); ++it
-            for (int i = 0; i < texte_fichier.size(); i++)
-            {
+			size_t index;
+			for each (string keyword in liste)
+			{
+				for each (string ligne in texte_fichier)
+				{
+					index = 0;
+					while (index != string::npos)
+					{
+						index = ligne.find(keyword, index);
+						if (ligne.find(keyword) != string::npos)
+						{
 
-               index = texte_fichier[i].find(keyword, index);
-
-               if (index == string::npos)break;
-               
-               string css_start;
-               string css_end;
-               texte_fichier[i].replace(index, keyword.length(), css_start + keyword + css_end);
-            }
-         }
+							ligne.replace(index, keyword.length(),
+								OUVERTURE_BALISE + STYLE_BLEU + FERMETURE_BALISE + keyword + BALISE_FIN);
+						}
+					}
+				}
+			}
 		}
 
 		// ../../ ne change rien... cela écrit toujours dans le fichier courant
