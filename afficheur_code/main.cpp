@@ -92,6 +92,18 @@ bool fichier_existe(const string &nom)
 	return !!(ifstream{ nom });
 }
 
+template <class It>
+void creer_fichier_web(It it)
+{
+	ecrire_fichier.open(*it + ".html");
+	if (ecrire_fichier.is_open())
+	{
+		for (auto it_lecture = begin(texte_fichier); it_lecture != end(texte_fichier); it_lecture++)
+			ecrire_fichier << *it_lecture << "<br />";
+	}
+	ecrire_fichier.close();
+}
+
 int main(int argc, char * argv[])
 {
 	bool couleur_code = false;
@@ -190,14 +202,7 @@ int main(int argc, char * argv[])
 			ecrire_fichier.close();
 		}
 
-		// ../../ ne change rien... cela écrit toujours dans le fichier courant
-		ecrire_fichier.open(*it + ".html");
-		if (ecrire_fichier.is_open())
-		{
-			for (auto it_lecture = begin(texte_fichier); it_lecture != end(texte_fichier); it_lecture++)
-				ecrire_fichier << *it_lecture << "<br />";
-		}
-		ecrire_fichier.close();
+		creer_fichier_web(*it);
 	}
 }
 
