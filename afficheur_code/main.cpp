@@ -5,7 +5,6 @@
 *************************************************************************/
 
 #include "keywords.cpp"
-#include "simon.cpp"
 #include <string>
 #include <vector>
 #include <map>
@@ -27,10 +26,30 @@ const string PLUS_PETIT = "&lt"; // <
 const string PLUS_GRAND = "&gt"; // >
 const string ESPERLUETTE = "&amp"; // &
 
+const map<string, string> sanitizer{ 
+	{ "<", PLUS_PETIT },
+	{ ">" , PLUS_GRAND },
+	{ "&" , ESPERLUETTE } 
+};
+/*
+void sanitizeString(string &ligne)
+{
+	int index = 0;
+	while(index != string::npos)
+	{
+		
+		index = ligne.find(chaine, index);
+		if (index != string::npos)
+		{
+			ligne.replace(index, chaine.length(), sanitizer[chaine]);
+			index += sanitizer[chaine].length;
+		}
+	}
+}
+*/
 
-
-const string COULEUR_CODE = "-couleur";
-const string STATISTIQUE = "-stats";
+const string COULEUR_CODE = "couleur";
+const string STATISTIQUE = "stats";
 const string REGEX = "[a-zA-Z0-9_]+";
 
 bool compare(const pair<string, int>&i, const pair<string, int>&j)
@@ -104,18 +123,47 @@ void creer_fichier_web(It it, vector<string>texte)
 	ecrire_fichier.close();
 }
 
+
+
+void ajouter_css(vector<string> &lignes)
+{
+	int index;
+	for each (string keyword in liste)
+	{
+		for (int i = 0; i < lignes.size(); i++)
+		{
+			index = 0;
+			while (index == string::npos)
+			{
+				index = lignes[i].find(keyword, index);
+				if (index != string::npos)
+				{
+					/*
+					string ligne = texte_fichier[i];
+					texte_fichier[i] = ligne.substr(0, index - 1)
+					+ OUVERTURE_BALISE + STYLE_BLEU + FERMETURE_BALISE
+					+ ligne.substr(index, index + keyword.length() ) + BALISE_FIN
+					+ ligne.substr(index + keyword.length(), ligne.length() );
+					*/
+
+					lignes[i].replace(index, keyword.length(), OUVERTURE_BALISE + STYLE_BLEU + FERMETURE_BALISE + keyword + BALISE_FIN);
+					index += OUVERTURE_BALISE.length() + STYLE_BLEU.length() + FERMETURE_BALISE.length() + keyword.length() + BALISE_FIN.length();
+				}
+			}
+		}
+	}
+}
+
+
 int main(int argc, char * argv[])
 {
 	bool couleur_code = false;
 	bool fichier_statistique = false;
 
-	/*On a pas besoin de les lignes suivantes je me trompe ?
 	// le premier paramètre est le nom de l'exécutable
-	string nom_programme = argv[0];*/
+	//string nom_programme = argv[0];
 
 	vector<string> noms_fichiers;
-	/* Non-utilisé ?
-	vector<string> textes_fichiers; */
 
 	if (argc > 1)
 	{
@@ -124,7 +172,7 @@ int main(int argc, char * argv[])
 			string arg = argv[i];
 			if (arg[0] == '-' || arg[0] == '/') // c'est une option
 			{
-				if (arg == COULEUR_CODE)
+				if (arg.substr(1) == COULEUR_CODE)
 				{
 					couleur_code = true;
 				}
@@ -169,42 +217,7 @@ int main(int argc, char * argv[])
 
 		if (couleur_code)
 		{
-			int index;
-			for each (string keyword in liste)
-			{
-				for (int i = 0; i < texte_fichier.size(); i++)
-				{
-					index = 0;
-					while (index == string::npos)
-					{
-						index = texte_fichier[i].find(keyword, index);
-						if ( index != string::npos)
-						{
-							/*
-							string ligne = texte_fichier[i];
-							texte_fichier[i] = ligne.substr(0, index - 1)
-								+ OUVERTURE_BALISE + STYLE_BLEU + FERMETURE_BALISE 
-								+ ligne.substr(index, index + keyword.length() ) + BALISE_FIN 
-								+ ligne.substr(index + keyword.length(), ligne.length() );
-							*/
-						
-							texte_fichier[i].replace(index, keyword.length(),OUVERTURE_BALISE + STYLE_BLEU + FERMETURE_BALISE + keyword + BALISE_FIN);
-							index += OUVERTURE_BALISE.length() + STYLE_BLEU.length(); +FERMETURE_BALISE.length() + keyword.length() + BALISE_FIN.length();
-						}
-					}
-				}
-			}
-			if (!empty(texte_fichier))
-			{
-				texte_fichier[0] = "<!DOCTYPE html> <title>Afficheur de code</title><pre>" + texte_fichier[0];
-				texte_fichier[texte_fichier.size() - 1] += "</pre>";
-			}
-			ecrire_fichier.open(*it + ".real.html");
-			for each (string ligne in texte_fichier)
-			{
-				ecrire_fichier << ligne << endl;
-			}
-			ecrire_fichier.close();
+			ajouter_css(texte_fichier);
 		}
 
 		creer_fichier_web(*it, texte_fichier);
