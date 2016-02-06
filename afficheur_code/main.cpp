@@ -33,20 +33,28 @@ const string COULEUR_CODE = "-couleur";
 const string STATISTIQUE = "-stats";
 const string REGEX = "[a-zA-Z0-9_]+";
 
-// Non utilisé pour l'instant donc pas nécessaire ?
-// const string DEFAULT_FILE = "default.cpp";
-
 bool compare(const pair<string, int>&i, const pair<string, int>&j)
 {
 	return i.second > j.second;
 }
 
+// Pas eu le temps de finir
+template <class It>
+void ordre_lexico(It debut, It fin)
+{
+	auto prochain = ++debut;
+	for (; debut != fin; debut++)
+	{
+		if (lexicographical_compare(debut->first, debut->second, prochain->first, prochain->second))
+			swap(debut, prochain);
+		++prochain;
+	}
+}
+
 void generer_stats(const string nom_fichier)
 {
-	// La regex n'est pas encore finie... Elle fonctionne mais ne traite pas encore toutes les conditions demandées par le prof
-	// Il faut que chacune des données contienne au moins un caractère alphanumérique pour passer
-	// Il faudrait aussi peut-être séparer les ; ??
-	// Finalement, le prof dit qu'on n'est pas obliger de traiter les suffices comme U, UL, f
+	// Je sais que la regex n'est pas la bonne pour ce qui a été demandé,
+	// cela est également dû à un manque de temps pour finir
 	string pattern{ "[a-zA-Z0-9]+" };
 	regex expression{ pattern };
 
@@ -65,17 +73,14 @@ void generer_stats(const string nom_fichier)
 		stats.push_back(make_pair(p.first, p.second));
 
 	sort(stats.begin(), stats.end(), compare);
+	ordre_lexico(begin(stats), end(stats));
 
 	ofstream output;
 	output.open(nom_fichier + "_stats.txt");
 
 	if (output.is_open())
-	{
 		for (auto & p : stats)
-		{
 			output << p.first << " : " << p.second << endl;
-		}
-	}
 
 	output.close();
 }
