@@ -12,30 +12,25 @@ const string FERMETURE_BALISE = " >";
 
 
 
-
-size_t index;
+int index;
 for each (string keyword in liste)
 {
-	for each (string ligne in texte_fichier)
-	{
-		index = 0;
-		while (index != string::npos)
-		{
-			index = ligne.find(keyword, index);
-			if (ligne.find(keyword) != string::npos)
-			{
+for (int i = 0; i < texte_fichier.size(); i++)
+{
+index = 0;
+while (index == string::npos)
+{
+index = texte_fichier[i].find(keyword, index);
+if ( index != string::npos)
+{
 
-			ligne.replace(index, keyword.length(),
-			OUVERTURE_BALISE + STYLE_BLEU + FERMETURE_BALISE + keyword + BALISE_FIN);
+
+texte_fichier[i].replace(index, keyword.length(), OUVERTURE_BALISE + STYLE_BLEU + FERMETURE_BALISE + keyword + BALISE_FIN);
+index += OUVERTURE_BALISE.length() + STYLE_BLEU.length(); +FERMETURE_BALISE.length() + keyword.length() + BALISE_FIN.length();
+						}
+					}
+				}
 			}
-		}
-	}
-}
-
-
-
-
-
 
 ecrire_fichier.open(*it + ".real.html");
 for each (string ligne in texte_fichier)
