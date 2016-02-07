@@ -14,45 +14,58 @@
 #include <iostream>
 using namespace std;
 
-const string BALISE_DEBUT = "<span >";
-const string BALISE_FIN = "</span>";
-
-const string STYLE_BLEU = "class='.keyword'";
-const string STYLE_BLEU_CSS = "style = 'color:blue'";
-const string OUVERTURE_BALISE = "<span ";
-const string FERMETURE_BALISE = " >";
 
 
+const string OPTION_COULEUR_CODE = "couleur";
+const string OPTION_STATISTIQUE = "stats";
+const string REGEX = "[a-zA-Z0-9_]+";
+
+const string ESPERLUETTE = "&amp"; // &
 const string PLUS_PETIT = "&lt"; // <
 const string PLUS_GRAND = "&gt"; // >
-const string ESPERLUETTE = "&amp"; // &
 
-const map<string, string> sanitizer{ 
+map<string, string> SPECIAL_CHAR{ 
+	{ "&" , ESPERLUETTE },
 	{ "<", PLUS_PETIT },
-	{ ">" , PLUS_GRAND },
-	{ "&" , ESPERLUETTE } 
+	{ ">" , PLUS_GRAND }
 };
 
-/*
-void sanitizeString(string &ligne)
+const string BALISE_DEBUT = "<span>";
+const string BALISE_FIN = "</span>";
+
+
+const string CSS_BLEU = " class='bleu'";
+const string OUVERTURE_SPAN = "<span";
+const string FERMETURE_SPAN = ">";
+
+
+string sanitizeString(string ligne)
 {
-	int index = 0;
-	while(index != string::npos)
+	if ( ligne.size() > 0 )
 	{
-		
-		index = ligne.find(chaine, index);
-		if (index != string::npos)
+		int index;
+		for (auto courant = SPECIAL_CHAR.begin(), fin = SPECIAL_CHAR.end(); courant != fin; courant++)
 		{
-			ligne.replace(index, chaine.length(), sanitizer[chaine]);
-			index += sanitizer[chaine].length;
+			for (size_t i = 0; i < ligne.size(); i++)
+			{
+				index = 0;
+				while ( (index = ligne.find(courant->second, index) ) != string::npos)
+				{
+					if (index != string::npos)
+					{
+						string new_ligne = ligne.substr(0, index - 1 )
+							+ courant->second
+							+ ligne.substr( index + 1, ligne.size() );
+						ligne = new_ligne;
+						index += courant->second.size();
+					}
+				}
+			}
 		}
 	}
+	return ligne;
 }
-*/
 
-const string COULEUR_CODE = "couleur";
-const string STATISTIQUE = "stats";
-const string REGEX = "[a-zA-Z0-9_]+";
 
 // Pas eu le temps de finir
 /*template <class It>
@@ -118,7 +131,7 @@ void creer_fichier_web(string nom_fichier, vector<string>texte)
 {
 	if (!empty(texte))
 	{
-		texte[0] = "<!DOCTYPE html><style>.keyword{color:blue;}</style> <title>Afficheur de code</title><pre>" + texte[0];
+		texte[0] = "<!DOCTYPE html><head><style>.bleu{color:blue};</style><title>Afficheur de code</title></head><pre>" + texte[0];
 		texte[texte.size() - 1] += "</pre>";
 	}
 	ofstream ecrire_fichier;
@@ -126,40 +139,47 @@ void creer_fichier_web(string nom_fichier, vector<string>texte)
 	if (ecrire_fichier.is_open())
 	{
 		for (auto it_lecture = begin(texte); it_lecture != end(texte); it_lecture++)
-			ecrire_fichier << *it_lecture << "<br />";
+			ecrire_fichier << *it_lecture << "<br>";
 	}
 	ecrire_fichier.close();
 }
 
+
+
+
+string keywordWithCSS(const string &keyword)
+{
+	return OUVERTURE_SPAN + CSS_BLEU + FERMETURE_SPAN + keyword + BALISE_FIN;
+}
+
 void ajouter_css(vector<string> &lignes)
 {
+	//bool open_tag = false;
 	int index;
 	for each (string keyword in liste)
 	{
-		for (int i = 0; i < lignes.size(); i++)
+		for (size_t i = 0; i < lignes.size(); i++)
 		{
 			index = 0;
-			while (index != string::npos)
+			while ( ( index = lignes[i].find(keyword + " ", index) ) != string::npos)
 			{
-				index = lignes[i].find(keyword, index);
-				if (index != string::npos)
-				{
-					
-					string ligne = lignes[i];
-					lignes[i] = ligne.substr(0, index - 1)
-					+ OUVERTURE_BALISE + STYLE_BLEU + FERMETURE_BALISE
-					+ ligne.substr(index, index + keyword.length() ) + BALISE_FIN
-					+ ligne.substr(index + keyword.length(), ligne.length() );
-					
+				string new_keyword = keywordWithCSS(keyword);
 
-					//lignes[i].replace(index, keyword.length(), OUVERTURE_BALISE + STYLE_BLEU + FERMETURE_BALISE + keyword + BALISE_FIN);
-					index += OUVERTURE_BALISE.length() + STYLE_BLEU.length() + FERMETURE_BALISE.length() + keyword.length() + BALISE_FIN.length();
-				}
+				lignes[i].replace(index, keyword.length(), new_keyword);
+				index += new_keyword.length();
+					
+				//cout << lignes[i] << endl;
 			}
 		}
 	}
 }
 
+
+
+void remplacer(string &toAdd, const string &toRemove, string )
+{
+
+}
 
 int main(int argc, char * argv[])
 {
@@ -167,7 +187,7 @@ int main(int argc, char * argv[])
 	bool fichier_statistique = false;
 
 	vector<string> noms_fichiers;
-
+	// début de la gestion des paranètres
 	if (argc > 1)
 	{
 		for (int i = 1; i < argc; i++)
@@ -175,13 +195,17 @@ int main(int argc, char * argv[])
 			string arg = argv[i];
 			if (arg[0] == '-' || arg[0] == '/') // c'est une option
 			{
-				if (arg.substr(1) == COULEUR_CODE)
+				if (arg.substr(1) == OPTION_COULEUR_CODE)
 				{
 					couleur_code = true;
 				}
-				else if (arg == STATISTIQUE)
+				else if (arg.substr(1) == OPTION_STATISTIQUE)
 				{
 					fichier_statistique = true;
+				}
+				else
+				{
+					cout << "L'option : " << arg << "n'est pas valide pour ce programme." << endl;
 				}
 			}
 			else // c'est un fichier
@@ -193,6 +217,7 @@ int main(int argc, char * argv[])
 			}
 		}
 	}
+	// fin de la gestion des paranètres
 
 	// Code de test pour s'assurer que les options sont prises en compte
 	cout << "couleur : " << couleur_code << endl;
@@ -204,9 +229,6 @@ int main(int argc, char * argv[])
 
 	for (auto it = begin(noms_fichiers); it != end(noms_fichiers); it++)
 	{
-		// J'ai essayé de mettre la lecture dans une fonction à part, mais quand on lui
-		// envoyait une variable ifstream par paramètre, cela générait une erreur
-		// que je ne comprenais pas
 		lire_fichier.open(*it);
 		if (lire_fichier.is_open())
 		{
@@ -220,13 +242,20 @@ int main(int argc, char * argv[])
 		if (fichier_statistique)
 			generer_stats(*it);
 
+		/*
+		for each (string ligne in texte_fichier)
+		{
+			ligne = sanitizeString(ligne);
+		}
+		*/
 		if (couleur_code)
 		{
 			ajouter_css(texte_fichier);
 		}
-
 		creer_fichier_web(*it, texte_fichier);
 	}
+
+	cout << "fin des operations" << endl;
 }
 
 
