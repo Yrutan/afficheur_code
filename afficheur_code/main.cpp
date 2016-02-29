@@ -10,94 +10,8 @@
 #include <regex>
 #include <fstream>
 #include <iostream>
+#include "keywords.cpp"
 using namespace std;
-
-const vector<string> liste{
-	"alignas"
-	,"alignof"
-	,"and"
-	,"and_eq"
-	,"asm"
-	,"auto"
-	,"bitand"
-	,"bitor"
-	,"bool"
-	,"break"
-	,"case"
-	,"catch"
-	,"char"
-	,"class"
-	,"compl"
-	,"const"
-	,"constexpr"
-	,"const_cast"
-	,"continue"
-	,"decltype"
-	,"default"
-	,"delete"
-	,"do"
-	,"double"
-	,"dynamic_cast"
-	,"else"
-	,"enum"
-	,"explicit"
-	,"export"
-	,"extern"
-	,"false"
-	,"float"
-	,"for"
-	,"friend"
-	,"goto"
-	,"if"
-	,"inline"
-	,"int"
-	,"include"
-	,"long"
-	,"mutable"
-	,"namespace"
-	,"new"
-	,"noexcept"
-	,"not"
-	,"not_eq"
-	,"nullptr"
-	,"operator"
-	,"or"
-	,"or_eq"
-	,"private"
-	,"protected"
-	,"public"
-	,"register"
-	,"reinterpret_cast"
-	,"return"
-	,"short"
-	,"signed"
-	,"sizeof"
-	,"static"
-	,"static_assert"
-	,"static_cast"
-	,"struct"
-	,"switch"
-	,"template"
-	,"this"
-	,"thread_local"
-	,"throw"
-	,"true"
-	,"try"
-	,"typedef"
-	,"typeid"
-	,"typename"
-	,"union"
-	,"unsigned"
-	,"using"
-	,"virtual"
-	,"void"
-	,"volatile"
-	,"wchar_t"
-	,"while"
-	,"xor"
-	,"xor_eq" };
-
-
 
 const string OPTION_COULEUR_CODE = "couleur";
 const string OPTION_STATISTIQUE = "stats";
@@ -117,19 +31,19 @@ const string BALISE_DEBUT = "<span>";
 const string BALISE_FIN = "</span>";
 
 
-const string CSS_BLEU = " class='bleu'";
-const string OUVERTURE_SPAN = "<span";
-const string FERMETURE_SPAN = ">";
+const string CSS_BLEU = " class='bleu' ";
+const string OUVERTURE_SPAN = "<span ";
+const string FERMETURE_BALISE = " >";
 
 
 string sanitizeString(string ligne)
 {
-	if ( ligne.size() > 0 )
+	if ( !ligne.empty() )
 	{
 		int index;
 		for (auto courant = SPECIAL_CHAR.begin(), fin = SPECIAL_CHAR.end(); courant != fin; courant++)
 		{
-			for (size_t i = 0; i < ligne.size(); i++)
+			for (int i = 0; i < ligne.size(); i++)
 			{
 				index = 0;
 				while ( (index = ligne.find(courant->second, index) ) != string::npos)
@@ -232,7 +146,7 @@ void creer_fichier_web(string nom_fichier, vector<string>texte)
 
 string keywordWithCSS(const string &keyword)
 {
-	return OUVERTURE_SPAN + CSS_BLEU + FERMETURE_SPAN + keyword + BALISE_FIN;
+	return OUVERTURE_SPAN + CSS_BLEU + FERMETURE_BALISE + keyword + BALISE_FIN;
 }
 
 void ajouter_css(vector<string> &lignes)
@@ -241,7 +155,7 @@ void ajouter_css(vector<string> &lignes)
 	int index;
 	for each (string keyword in liste)
 	{
-		for (size_t i = 0; i < lignes.size(); i++)
+		for (size_t i = 0; i < lignes.size(); ++i)
 		{
 			index = 0;
 			while ( ( index = lignes[i].find(keyword + " ", index) ) != string::npos)
