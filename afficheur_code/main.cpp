@@ -194,7 +194,7 @@ int main(int argc, char * argv[])
 	cout << std::boolalpha; // permet d'afficher true/false au lieu de 1/0
 	cout << "Language de programmation recherche : " << init.language_prog << endl;
 	cout << "Afficher la couleur : " << init.couleur << endl;
-	cout << "Générer le fichier de statistique : " << init.statistique << endl;
+	cout << "Generer le fichier de statistique : " << init.statistique << endl;
 	cout << "Nombre de fichiers demandes : " << init.noms_fichiers.size() << endl;
 	cout << "Nombre de fichiers existants : " << init.noms_fichiers.size() << endl;
 
@@ -229,33 +229,35 @@ int main(int argc, char * argv[])
 	/*********************************************
 	* Début de la zone du traitement séquentiel
 	*********************************************/
-	cout << "Début du traitement sequentiel" << endl;
+	//cout << "Debut du traitement sequentiel" << endl;
 	// begin timer
 
 
 	// end time
-	cout << "Fin du traitement sequentiel" << endl;
+	//cout << "Fin du traitement sequentiel" << endl;
 
 	/*********************************************
 	* Fin de la zone du traitement séquentiel
 	*********************************************/
+
+	cout << "Temps pris pour le traitement sequentiel : " << endl;
 
 	// afficher le temps pris pour le traitement séquentiel
 
 	/*********************************************
 	* Début de la zone du traitement en parallèle
 	*********************************************/
-	cout << "Début du traitement en parallele" << endl;
+	//cout << "Debut du traitement en parallele" << endl;
 	// begin timer
 
 
 	// end time
-	cout << "Fin du traitement en parallele" << endl;
+	//cout << "Fin du traitement en parallele" << endl;
 	/*********************************************
 	* Fin de la zone du traitement en parallèle
 	*********************************************/
 
-	// afficher le temps pris pour le traitement en parallèle
+	cout << "Temps pris pour le traitement en parallele : " << endl;
 
 	cout << "Fin du programme" << endl;
 }
