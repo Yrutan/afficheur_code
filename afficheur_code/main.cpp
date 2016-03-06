@@ -11,6 +11,10 @@
 #include <fstream>
 #include <iostream>
 #include "keywords.cpp"
+#include "initialisation.cpp"
+#include "sequentiel.cpp"
+#include "parallele.cpp"
+#include "timer.cpp"
 using namespace std;
 
 const string OPTION_COULEUR_CODE = "couleur";
@@ -43,7 +47,7 @@ string sanitizeString(string ligne)
 		int index;
 		for (auto courant = SPECIAL_CHAR.begin(), fin = SPECIAL_CHAR.end(); courant != fin; courant++)
 		{
-			for (int i = 0; i < ligne.size(); i++)
+			for (unsigned int i = 0; i < ligne.size(); i++)
 			{
 				index = 0;
 				while ( (index = ligne.find(courant->second, index) ) != string::npos)
@@ -180,41 +184,61 @@ void remplacer(string &toAdd, const string &toRemove, string )
 
 int main(int argc, char * argv[])
 {
+	// couleur_code indique si on doit ajouter le code pour la couleur dans le fichier html
 	bool couleur_code = false;
 	bool fichier_statistique = false;
 
 	vector<string> noms_fichiers;
+
 	// début de la gestion des paranètres
 	if (argc > 1)
 	{
+		// le premier paramètre est le chemin de l'exécutable (le paramètre à l'index 0)
 		for (int i = 1; i < argc; i++)
 		{
 			string arg = argv[i];
-			if (arg[0] == '-' || arg[0] == '/') // c'est une option
+			if ( !std::empty(arg) )
 			{
-				if (arg.substr(1) == OPTION_COULEUR_CODE)
+				// Si le premier caractère est '-' ou '/'
+				if (arg[0] == '-' || arg[0] == '/') // Le paramètre doit être une option
 				{
-					couleur_code = true;
+					if (arg.substr(1) == OPTION_COULEUR_CODE)
+					{
+						couleur_code = true;
+					}
+					else if (arg.substr(1) == OPTION_STATISTIQUE)
+					{
+						fichier_statistique = true;
+					}
+					else
+					{
+						cout << "L'option : " << arg << " n'est pas valide pour ce programme." << endl;
+					}
 				}
-				else if (arg.substr(1) == OPTION_STATISTIQUE)
+				// Si le paramètre n'est pas une option
+				else // alors c'est un nom de fichier
 				{
-					fichier_statistique = true;
+					if (fichier_existe(arg))
+					{
+						// Si le fichier existe alors on l'ajoute dans notre liste de fichiers à traiter.
+						noms_fichiers.push_back(arg);
+					}
+					else
+					{
+						cout << "Le fichier " << arg << " n'existe pas !" << endl;
+					}
 				}
-				else
-				{
-					cout << "L'option : " << arg << "n'est pas valide pour ce programme." << endl;
-				}
-			}
-			else // c'est un fichier
-			{
-				if (fichier_existe(arg))
-					noms_fichiers.push_back(arg);
-				else
-					cout << "Le fichier " << arg << " n'existe pas !" << endl;
 			}
 		}
 	}
-	// fin de la gestion des paranètres
+	// fin de la gestion des paramètres
+
+
+	// remplacer la gestion des paramètres
+
+	// problème avec le constructeur à régler ce dimanche 6 mars
+	//Initialisation init = new Initialisation(argc, *argv, std::cout);
+	// utiliser les variable de l'instance de la classe
 
 	// Code de test pour s'assurer que les options sont prises en compte
 	cout << "couleur : " << couleur_code << endl;
