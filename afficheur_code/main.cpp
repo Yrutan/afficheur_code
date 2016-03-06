@@ -191,7 +191,7 @@ int main(int argc, char * argv[])
 	Initialisation init( argc, argv, std::cout);
 
 	// confirmation des paramètres
-	cout << std::boolalpha;
+	cout << std::boolalpha; // permet d'afficher true/false au lieu de 1/0
 	cout << "Language de programmation recherche : " << init.language_prog << endl;
 	cout << "Afficher la couleur : " << init.couleur << endl;
 	cout << "Générer le fichier de statistique : " << init.statistique << endl;
