@@ -184,71 +184,30 @@ void remplacer(string &toAdd, const string &toRemove, string )
 
 int main(int argc, char * argv[])
 {
-	// couleur_code indique si on doit ajouter le code pour la couleur dans le fichier html
-	bool couleur_code = false;
-	bool fichier_statistique = false;
+	/*********************************************
+	* Zone d'initialisation du programme
+	*********************************************/ 
 
-	vector<string> noms_fichiers;
+	Initialisation init( argc, argv, std::cout);
 
-	// début de la gestion des paranètres
-	if (argc > 1)
-	{
-		// le premier paramètre est le chemin de l'exécutable (le paramètre à l'index 0)
-		for (int i = 1; i < argc; i++)
-		{
-			string arg = argv[i];
-			if ( !std::empty(arg) )
-			{
-				// Si le premier caractère est '-' ou '/'
-				if (arg[0] == '-' || arg[0] == '/') // Le paramètre doit être une option
-				{
-					if (arg.substr(1) == OPTION_COULEUR_CODE)
-					{
-						couleur_code = true;
-					}
-					else if (arg.substr(1) == OPTION_STATISTIQUE)
-					{
-						fichier_statistique = true;
-					}
-					else
-					{
-						cout << "L'option : " << arg << " n'est pas valide pour ce programme." << endl;
-					}
-				}
-				// Si le paramètre n'est pas une option
-				else // alors c'est un nom de fichier
-				{
-					if (fichier_existe(arg))
-					{
-						// Si le fichier existe alors on l'ajoute dans notre liste de fichiers à traiter.
-						noms_fichiers.push_back(arg);
-					}
-					else
-					{
-						cout << "Le fichier " << arg << " n'existe pas !" << endl;
-					}
-				}
-			}
-		}
-	}
-	// fin de la gestion des paramètres
+	// confirmation des paramètres
+	cout << std::boolalpha;
+	cout << "Language de programmation recherche : " << init.language_prog << endl;
+	cout << "Afficher la couleur : " << init.couleur << endl;
+	cout << "Générer le fichier de statistique : " << init.statistique << endl;
+	cout << "Nombre de fichiers demandes : " << init.noms_fichiers.size() << endl;
+	cout << "Nombre de fichiers existants : " << init.noms_fichiers.size() << endl;
 
+	/*********************************************
+	* Fin d'initialisation du programme
+	*********************************************/
 
-	// remplacer la gestion des paramètres
-
-	// problème avec le constructeur à régler ce dimanche 6 mars
-	//Initialisation init = new Initialisation(argc, *argv, std::cout);
-	// utiliser les variable de l'instance de la classe
-
-	// Code de test pour s'assurer que les options sont prises en compte
-	cout << "couleur : " << couleur_code << endl;
-	cout << "statistique : " << fichier_statistique << endl;
-
+	// code à palcer dans des fonctions 
 	ifstream lire_fichier;
 	vector<string> texte_fichier;
 	string ligne;
 
-	for (auto it = begin(noms_fichiers); it != end(noms_fichiers); it++)
+	for (auto it = begin(init.noms_fichiers); it != end(init.noms_fichiers); it++)
 	{
 		lire_fichier.open(*it);
 		if (lire_fichier.is_open())
@@ -260,15 +219,43 @@ int main(int argc, char * argv[])
 		}
 		lire_fichier.close();
 
-		if (fichier_statistique)
+		if (init.statistique)
 			generer_stats(*it);
-
-		if (couleur_code)
-		{
+		if (init.couleur)
 			ajouter_css(texte_fichier);
-		}
 		creer_fichier_web(*it, texte_fichier);
 	}
 
-	cout << "fin des operations" << endl;
+	/*********************************************
+	* Début de la zone du traitement séquentiel
+	*********************************************/
+	cout << "Début du traitement sequentiel" << endl;
+	// begin timer
+
+
+	// end time
+	cout << "Fin du traitement sequentiel" << endl;
+
+	/*********************************************
+	* Fin de la zone du traitement séquentiel
+	*********************************************/
+
+	// afficher le temps pris pour le traitement séquentiel
+
+	/*********************************************
+	* Début de la zone du traitement en parallèle
+	*********************************************/
+	cout << "Début du traitement en parallele" << endl;
+	// begin timer
+
+
+	// end time
+	cout << "Fin du traitement en parallele" << endl;
+	/*********************************************
+	* Fin de la zone du traitement en parallèle
+	*********************************************/
+
+	// afficher le temps pris pour le traitement en parallèle
+
+	cout << "Fin du programme" << endl;
 }

@@ -16,8 +16,10 @@ class Initialisation
 	std::ostream &os;
 public :
 
+	string language_prog = "C++";
 	bool couleur = false;
 	bool statistique = false;
+	int nb_fichiers = 0;
 
 	vector<string> noms_fichiers;
 
@@ -28,7 +30,7 @@ public :
 		return !!(ifstream{ nom });
 	}
 
-	Initialisation( int &argc, char * argv[], std::ostream &os = cout) noexcept : os{os}
+	Initialisation( int argc, char * argv[], std::ostream &os = std::cout) noexcept : os{os}
 	{
 		// début de la gestion des paranètres
 		if (argc > 1)
@@ -58,6 +60,7 @@ public :
 					// Si le paramètre n'est pas une option
 					else // alors c'est un nom de fichier
 					{
+						nb_fichiers++;
 						if (fichier_existe(arg))
 						{
 							// Si le fichier existe alors on l'ajoute dans notre liste de fichiers à traiter.
@@ -65,7 +68,7 @@ public :
 						}
 						else
 						{
-							cout << "Le fichier " << arg << " n'existe pas !" << endl;
+							os << "Le fichier " << arg << " n'existe pas !" << endl;
 						}
 					}
 				}
