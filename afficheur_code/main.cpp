@@ -21,7 +21,7 @@ using namespace std::chrono;
 
 const string OPTION_COULEUR_CODE = "couleur";
 const string OPTION_STATISTIQUE = "stats";
-// const string REGEX = "[a-zA-Z0-9_]+";
+const string REGEX = "[a-zA-Z0-9_]+";
 const int NBFICHIERS = 10;
 
 const string ESPERLUETTE = "&amp"; // &
@@ -50,14 +50,14 @@ bool compare(const pair<string, int>&i, const pair<string, int>&j)
 
 void generer_stats(const string nom_fichier)
 {
-	/*string pattern{ "[a-zA-Z0-9]+" };
-	regex expression{ pattern };*/
+	string pattern{ "[a-zA-Z0-9]+" };
+	regex expression{ pattern };
 
 	map<string, int> donnees;
 	ifstream in{ nom_fichier };
 
 	for (string s; in >> s;)
-		//if(regex_match(s, expression))
+		if(regex_match(s, expression))
 			donnees[s]++;
 
 	vector<pair<string, int>> stats;
