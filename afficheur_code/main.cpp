@@ -21,8 +21,8 @@ using namespace std::chrono;
 
 const string OPTION_COULEUR_CODE = "couleur";
 const string OPTION_STATISTIQUE = "stats";
-const string REGEX = "[a-zA-Z0-9_]+";
-const int NBFICHIERS = 1000;
+// const string REGEX = "[a-zA-Z0-9_]+";
+const int NBFICHIERS = 10;
 
 const string ESPERLUETTE = "&amp"; // &
 const string PLUS_PETIT = "&lt"; // <
@@ -50,14 +50,14 @@ bool compare(const pair<string, int>&i, const pair<string, int>&j)
 
 void generer_stats(const string nom_fichier)
 {
-	string pattern{ "[a-zA-Z0-9]+" };
-	regex expression{ pattern };
+	/*string pattern{ "[a-zA-Z0-9]+" };
+	regex expression{ pattern };*/
 
 	map<string, int> donnees;
 	ifstream in{ nom_fichier };
 
 	for (string s; in >> s;)
-		if(regex_match(s, expression))
+		//if(regex_match(s, expression))
 			donnees[s]++;
 
 	vector<pair<string, int>> stats;
@@ -154,8 +154,8 @@ void sequentiel(const vector<string> &noms_fichiers, const bool couleur = true, 
 
 	for (auto it = begin(noms_fichiers); it != end(noms_fichiers); it++)
 	{
-		/*for (int i = 0; i < NBFICHIERS; ++i)
-		{*/
+		for (int i = 0; i < NBFICHIERS; ++i)
+		{
 			lire_fichier.open(*it);
 			if (lire_fichier.is_open())
 			{
@@ -170,7 +170,7 @@ void sequentiel(const vector<string> &noms_fichiers, const bool couleur = true, 
 				generer_stats(*it);
 
 			creer_fichier_web(*it, texte_fichier, couleur);
-		//}
+		}
 
 	}
 }
