@@ -10,16 +10,19 @@
 #include <regex>
 #include <fstream>
 #include <iostream>
+#include <chrono>
 #include "keywords.cpp"
 #include "initialisation.cpp"
 #include "sequentiel.cpp"
 #include "parallele.cpp"
 #include "timer.cpp"
 using namespace std;
+using namespace std::chrono;
 
 const string OPTION_COULEUR_CODE = "couleur";
 const string OPTION_STATISTIQUE = "stats";
 const string REGEX = "[a-zA-Z0-9_]+";
+const int NBFICHIERS = 1000;
 
 const string ESPERLUETTE = "&amp"; // &
 const string PLUS_PETIT = "&lt"; // <
@@ -47,8 +50,6 @@ bool compare(const pair<string, int>&i, const pair<string, int>&j)
 
 void generer_stats(const string nom_fichier)
 {
-	// Je sais que la regex n'est pas la bonne pour ce qui a été demandé,
-	// cela est également dû à un manque de temps pour finir
 	string pattern{ "[a-zA-Z0-9]+" };
 	regex expression{ pattern };
 
@@ -60,9 +61,6 @@ void generer_stats(const string nom_fichier)
 			donnees[s]++;
 
 	vector<pair<string, int>> stats;
-
-	// Sort ne marche malheuresment pas sur une map, il faut donc transférer
-	// les données dans un vector
 
 	for (auto & p : donnees)
 		stats.push_back(make_pair(p.first, p.second));
@@ -156,20 +154,24 @@ void sequentiel(const vector<string> &noms_fichiers, const bool couleur = true, 
 
 	for (auto it = begin(noms_fichiers); it != end(noms_fichiers); it++)
 	{
-		lire_fichier.open(*it);
-		if (lire_fichier.is_open())
-		{
-			while (getline(lire_fichier, ligne))
+		/*for (int i = 0; i < NBFICHIERS; ++i)
+		{*/
+			lire_fichier.open(*it);
+			if (lire_fichier.is_open())
 			{
-				texte_fichier.push_back(ligne);
+				while (getline(lire_fichier, ligne))
+				{
+					texte_fichier.push_back(ligne);
+				}
 			}
-		}
-		lire_fichier.close();
+			lire_fichier.close();
 
-		if (statistique)
-			generer_stats(*it);
+			if (statistique)
+				generer_stats(*it);
 
-		creer_fichier_web(*it, texte_fichier, couleur);
+			creer_fichier_web(*it, texte_fichier, couleur);
+		//}
+
 	}
 }
 
@@ -181,6 +183,7 @@ int main(int argc, char * argv[])
 	*********************************************/ 
 
 	Initialisation init( argc, argv, std::cout);
+	ofstream output("resultats_temps.txt");
 
 	// confirmation des paramètres
 	cout << std::boolalpha; // permet d'afficher true/false au lieu de 1/0
@@ -194,16 +197,18 @@ int main(int argc, char * argv[])
 	* Fin d'initialisation du programme
 	*********************************************/
 
-	sequentiel(init.noms_fichiers, init.couleur, init.statistique);
-
-
 
 	/*********************************************
 	* Début de la zone du traitement séquentiel
 	*********************************************/
 	//cout << "Debut du traitement sequentiel" << endl;
 	// begin timer
+
+	auto avant_seq = high_resolution_clock::now();
 	
+	sequentiel(init.noms_fichiers, init.couleur, init.statistique);
+
+	auto apres_seq = high_resolution_clock::now();
 
 	// end time
 	//cout << "Fin du traitement sequentiel" << endl;
@@ -212,7 +217,10 @@ int main(int argc, char * argv[])
 	* Fin de la zone du traitement séquentiel
 	*********************************************/
 
-	cout << "Temps pris pour le traitement sequentiel : " << endl;
+	if (output.is_open())
+		output << "Temps pris pour le traitement sequentiel : "
+			   << duration_cast<milliseconds>(apres_seq - avant_seq).count() 
+			   << " ms" << endl;
 
 	// afficher le temps pris pour le traitement séquentiel
 
@@ -222,6 +230,11 @@ int main(int argc, char * argv[])
 	//cout << "Debut du traitement en parallele" << endl;
 	// begin timer
 
+	auto avant_para = high_resolution_clock::now();
+
+	// Appeler la fonction de traitement parallèle
+
+	auto apres_para = high_resolution_clock::now();
 
 	// end time
 	//cout << "Fin du traitement en parallele" << endl;
@@ -229,7 +242,10 @@ int main(int argc, char * argv[])
 	* Fin de la zone du traitement en parallèle
 	*********************************************/
 
-	cout << "Temps pris pour le traitement en parallele : " << endl;
+	if (output.is_open())
+		output << "Temps pris pour le traitement en parallele : "
+		<< duration_cast<milliseconds>(apres_para - avant_para).count()
+		<< " ms" << endl;
 
 	cout << "Fin du programme" << endl;
 }

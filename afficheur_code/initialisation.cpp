@@ -30,7 +30,7 @@ public :
 
 	Initialisation( int argc, char * argv[], std::ostream &os = std::cout) noexcept : os{os}
 	{
-		// début de la gestion des paranètres
+		// début de la gestion des paramètres
 		if (argc > 1)
 		{
 			// le premier paramètre est le chemin de l'exécutable (le paramètre à l'index 0)
