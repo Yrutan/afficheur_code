@@ -8,7 +8,7 @@ Fait par Antoine Latendresse, Léa Kelly et Simon Roy
 #include <vector>
 using namespace std;
 
-const vector<string> liste{
+const vector<string> LISTE{
    "alignas"
    ,"alignof"
    ,"and"

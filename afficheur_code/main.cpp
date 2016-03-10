@@ -34,57 +34,15 @@ map<string, string> SPECIAL_CHAR{
 const string BALISE_DEBUT = "<span>";
 const string BALISE_FIN = "</span>";
 
-
 const string CSS_BLEU = " class='bleu' ";
 const string OUVERTURE_SPAN = "<span ";
 const string FERMETURE_BALISE = " >";
 
-
-string sanitizeString(string ligne)
-{
-	if ( !ligne.empty() )
-	{
-		int index;
-		for (auto courant = SPECIAL_CHAR.begin(), fin = SPECIAL_CHAR.end(); courant != fin; courant++)
-		{
-			for (unsigned int i = 0; i < ligne.size(); i++)
-			{
-				index = 0;
-				while ( (index = ligne.find(courant->second, index) ) != string::npos)
-				{
-					if (index != string::npos)
-					{
-						string new_ligne = ligne.substr(0, index - 1 )
-							+ courant->second
-							+ ligne.substr( index + 1, ligne.size() );
-						ligne = new_ligne;
-						index += courant->second.size();
-					}
-				}
-			}
-		}
-	}
-	return ligne;
-}
-
-
-// Pas eu le temps de finir
-/*template <class It>
-void ordre_lexico(It debut, It fin)
-{
-	auto prochain = ++debut;
-	for (; debut != fin; debut++)
-	{
-		if (lexicographical_compare(debut->first, debut->second, prochain->first, prochain->second))
-			swap(debut, prochain);
-		++prochain;
-	}
-}
-*/
-
 bool compare(const pair<string, int>&i, const pair<string, int>&j)
 {
-	return i.second > j.second;
+	// si ils n'ont pas la même valeur (même nombre) alors on compare lequel en a le plus
+	// sinon on les compare de manière lexicographique
+	return i.second != j.second ? i.second > j.second : std::lexicographical_compare(i.first.begin(), i.first.end(), j.first.begin(), j.first.end());
 }
 
 void generer_stats(const string nom_fichier)
@@ -105,20 +63,19 @@ void generer_stats(const string nom_fichier)
 
 	// Sort ne marche malheuresment pas sur une map, il faut donc transférer
 	// les données dans un vector
+
 	for (auto & p : donnees)
 		stats.push_back(make_pair(p.first, p.second));
 
 	sort(stats.begin(), stats.end(), compare);
-	//ordre_lexico(begin(stats), end(stats));
 
-	ofstream output;
-	output.open(nom_fichier + "_stats.txt");
+	ofstream output(nom_fichier +"_stats.txt");
 
 	if (output.is_open())
 		for (auto & p : stats)
 			output << p.first << " : " << p.second << endl;
 
-	output.close();
+	// pas de close(), car les flux sont des objets RAII
 }
 
 // Fonction utilisée pour vérifier l'existence d'un fichier
@@ -128,59 +85,94 @@ bool fichier_existe(const string &nom)
 	return !!(ifstream{ nom });
 }
 
-void creer_fichier_web(string nom_fichier, vector<string>texte)
+
+void remplacer(const string &toAdd, const string &toRemove, string &toModified)
 {
-	if (!empty(texte))
+	int index = 0;
+	while ((index = toModified.find(toRemove, index)) != string::npos)
 	{
-		texte[0] = "<!DOCTYPE html><head><style>.bleu{color:blue};</style><title>Afficheur de code</title></head><pre>" + texte[0];
-		texte[texte.size() - 1] += "</pre>";
+		toModified.replace(index, toRemove.length(), toAdd);
+		index += toAdd.length();
 	}
-	ofstream ecrire_fichier;
-	ecrire_fichier.open(nom_fichier + ".html");
-	if (ecrire_fichier.is_open())
-	{
-		for (auto it_lecture = begin(texte); it_lecture != end(texte); it_lecture++)
-			ecrire_fichier << *it_lecture << "<br>";
-	}
-	ecrire_fichier.close();
 }
-
-
-
-
 string keywordWithCSS(const string &keyword)
 {
 	return OUVERTURE_SPAN + CSS_BLEU + FERMETURE_BALISE + keyword + BALISE_FIN;
 }
-
 void ajouter_css(vector<string> &lignes)
 {
 	//bool open_tag = false;
-	int index;
-	for each (string keyword in liste)
+	int index = 0;
+	for (const string &keyword : LISTE)
 	{
 		for (size_t i = 0; i < lignes.size(); ++i)
 		{
+			// réinitialise l'index à 0 après chaque ligne
 			index = 0;
-			while ( ( index = lignes[i].find(keyword + " ", index) ) != string::npos)
+			while ((index = lignes[i].find(keyword + " ", index)) != string::npos)
 			{
 				string new_keyword = keywordWithCSS(keyword);
 
 				lignes[i].replace(index, keyword.length(), new_keyword);
 				index += new_keyword.length();
-					
-				//cout << lignes[i] << endl;
 			}
 		}
 	}
 }
 
-
-
-void remplacer(string &toAdd, const string &toRemove, string )
+void creer_fichier_web(string nom_fichier, vector<string>texte, const bool &couleur = false)
 {
-
+	if (!empty(texte))
+	{
+		for (string &ligne :texte)
+		{
+			remplacer(SPECIAL_CHAR["&"], "&", ligne);
+			remplacer(SPECIAL_CHAR["<"], "<", ligne);
+			remplacer(SPECIAL_CHAR[">"], ">", ligne);
+		}
+		if (couleur)
+		{
+			ajouter_css(texte);
+		}
+		texte[0] = "<!DOCTYPE html><head><style>.bleu{color:blue};</style><title>Afficheur de code</title></head><pre>" + texte[0];
+		texte.back() += "</pre>";
+	}
+	ofstream ecrire_fichier;
+	ecrire_fichier.open(nom_fichier + ".html");
+	if (ecrire_fichier.is_open())
+	{
+		for (auto it_texte = begin(texte); it_texte != end(texte); it_texte++)
+			ecrire_fichier << *it_texte << "<br>";
+	}
+	ecrire_fichier.close();
 }
+
+
+void sequentiel(const vector<string> &noms_fichiers, const bool couleur = true, const bool statistique = true)
+{
+	ifstream lire_fichier;
+	vector<string> texte_fichier;
+	string ligne;
+
+	for (auto it = begin(noms_fichiers); it != end(noms_fichiers); it++)
+	{
+		lire_fichier.open(*it);
+		if (lire_fichier.is_open())
+		{
+			while (getline(lire_fichier, ligne))
+			{
+				texte_fichier.push_back(ligne);
+			}
+		}
+		lire_fichier.close();
+
+		if (statistique)
+			generer_stats(*it);
+
+		creer_fichier_web(*it, texte_fichier, couleur);
+	}
+}
+
 
 int main(int argc, char * argv[])
 {
@@ -202,36 +194,16 @@ int main(int argc, char * argv[])
 	* Fin d'initialisation du programme
 	*********************************************/
 
-	// code à palcer dans des fonctions 
-	ifstream lire_fichier;
-	vector<string> texte_fichier;
-	string ligne;
+	sequentiel(init.noms_fichiers, init.couleur, init.statistique);
 
-	for (auto it = begin(init.noms_fichiers); it != end(init.noms_fichiers); it++)
-	{
-		lire_fichier.open(*it);
-		if (lire_fichier.is_open())
-		{
-			while (getline(lire_fichier, ligne))
-			{
-				texte_fichier.push_back(ligne);
-			}
-		}
-		lire_fichier.close();
 
-		if (init.statistique)
-			generer_stats(*it);
-		if (init.couleur)
-			ajouter_css(texte_fichier);
-		creer_fichier_web(*it, texte_fichier);
-	}
 
 	/*********************************************
 	* Début de la zone du traitement séquentiel
 	*********************************************/
 	//cout << "Debut du traitement sequentiel" << endl;
 	// begin timer
-
+	
 
 	// end time
 	//cout << "Fin du traitement sequentiel" << endl;

@@ -12,10 +12,8 @@ class Initialisation
 {
 	const string OPTION_COULEUR_CODE = "couleur";
 	const string OPTION_STATISTIQUE = "stats";
-
 	std::ostream &os;
 public :
-
 	string language_prog = "C++";
 	bool couleur = false;
 	bool statistique = false;
@@ -76,6 +74,5 @@ public :
 		}
 		// fin de la gestion des paranètres
 	}
-
 
 };
