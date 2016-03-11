@@ -12,9 +12,9 @@
 #include <iostream>
 #include <chrono>
 #include <thread>
+#include <future>
 #include "keywords.cpp"
 #include "initialisation.cpp"
-#include "parallele.cpp"
 using namespace std;
 using namespace std::chrono;
 
@@ -169,9 +169,54 @@ void sequentiel(const vector<string> &noms_fichiers, const bool couleur = true, 
 				generer_stats(*it);
 
 			creer_fichier_web(*it, texte_fichier, couleur);
+         texte_fichier.clear();
 		}
-
 	}
+}
+
+// http://h-deb.clg.qc.ca/Sujets/Parallelisme/thread_pool.html
+class pool
+{
+   struct tache
+   {
+      virtual void execute() = 0;
+      virtual ~tache() = default;
+   };
+   template <class F>
+   class tache_impl
+      : public tache
+   {
+      F f;
+   public:
+      tache_impl(F && f)
+         : f{ move(f) }
+      {
+      }
+      void execute()
+      {
+         f();
+      }
+   };
+
+
+void parallele(const unsigned int nombre_thread, const vector<string> &noms_fichiers, const bool couleur = true, const bool statistique = true)
+{
+   pool pool_thread();
+   // mutex(s)
+   // suggestion : faire nombre_thread mutex (ou un seul mutex avec nombre_thread d'accès) 
+   // et faire attendre le main 
+   // quand un accès est libéré assigner la tâche suivante au thread libre.
+
+   // while tâche disponible
+   //    partir x threads
+   //    attendre qu'un ait fini
+   //    lui assigner la tâche suivante
+   //    continuer à attendre avec la boucle
+   // end while
+   
+   
+
+
 }
 
 
@@ -233,6 +278,7 @@ int main(int argc, char * argv[])
 	auto avant_para = high_resolution_clock::now();
 
 	// Appeler la fonction de traitement parallèle
+   parallele(nombre_threads, init.noms_fichiers, init.couleur, init.statistique);
 
 	auto apres_para = high_resolution_clock::now();
 
