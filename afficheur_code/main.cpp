@@ -11,11 +11,10 @@
 #include <fstream>
 #include <iostream>
 #include <chrono>
+#include <thread>
 #include "keywords.cpp"
 #include "initialisation.cpp"
-#include "sequentiel.cpp"
 #include "parallele.cpp"
-#include "timer.cpp"
 using namespace std;
 using namespace std::chrono;
 
@@ -184,6 +183,7 @@ int main(int argc, char * argv[])
 
 	Initialisation init( argc, argv, std::cout);
 	ofstream output("resultats_temps.txt");
+	unsigned int nombre_threads = std::thread::hardware_concurrency();
 
 	// confirmation des paramètres
 	cout << std::boolalpha; // permet d'afficher true/false au lieu de 1/0
