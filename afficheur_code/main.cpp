@@ -153,24 +153,21 @@ void sequentiel(const vector<string> &noms_fichiers, const bool couleur = true, 
 
 	for (auto it = begin(noms_fichiers); it != end(noms_fichiers); it++)
 	{
-		for (int i = 0; i < NBFICHIERS; ++i)
+		lire_fichier.open(*it);
+		if (lire_fichier.is_open())
 		{
-			lire_fichier.open(*it);
-			if (lire_fichier.is_open())
+			while (getline(lire_fichier, ligne))
 			{
-				while (getline(lire_fichier, ligne))
-				{
-					texte_fichier.push_back(ligne);
-				}
+				texte_fichier.push_back(ligne);
 			}
-			lire_fichier.close();
-
-			if (statistique)
-				generer_stats(*it);
-
-			creer_fichier_web(*it, texte_fichier, couleur);
-         texte_fichier.clear();
 		}
+		lire_fichier.close();
+
+		if (statistique)
+			generer_stats(*it);
+
+		creer_fichier_web(*it, texte_fichier, couleur);
+		texte_fichier.clear();
 	}
 }
 
@@ -253,11 +250,13 @@ int main(int argc, char * argv[])
 
 	// confirmation des paramètres
 	cout << std::boolalpha; // permet d'afficher true/false au lieu de 1/0
-	cout << "Language de programmation recherche : " << init.language_prog << endl;
+	cout << "Language de programmation rechercher : " << init.language_prog << endl;
 	cout << "Afficher la couleur : " << init.couleur << endl;
 	cout << "Generer le fichier de statistique : " << init.statistique << endl;
 	cout << "Nombre de fichiers demandes : " << init.noms_fichiers.size() << endl;
 	cout << "Nombre de fichiers existants : " << init.noms_fichiers.size() << endl;
+
+	cout << endl;
 
 	/*********************************************
 	* Fin d'initialisation du programme
@@ -277,24 +276,21 @@ int main(int argc, char * argv[])
 
 	// end time
 	cout << "Fin du traitement sequentiel" << endl;
-
+	cout << "Temps pris pour le traitement sequentiel : "
+		<< duration_cast<milliseconds>(apres_seq - avant_seq).count()
+		<< " ms" << endl;
 	/*********************************************
 	* Fin de la zone du traitement séquentiel
 	*********************************************/
-
 	if (output.is_open())
 		output << "Temps pris pour le traitement sequentiel : "
 			   << duration_cast<milliseconds>(apres_seq - avant_seq).count() 
 			   << " ms" << endl;
-
-	// afficher le temps pris pour le traitement séquentiel
-
+	
 	/*********************************************
 	* Début de la zone du traitement en parallèle
 	*********************************************/
 	cout << "Debut du traitement en parallele" << endl;
-	// begin timer
-
 	auto avant_para = high_resolution_clock::now();
 
 	// Appeler la fonction de traitement parallèle
@@ -302,8 +298,10 @@ int main(int argc, char * argv[])
 
 	auto apres_para = high_resolution_clock::now();
 
-	// end time
 	cout << "Fin du traitement en parallele" << endl;
+	cout << "Temps pris pour le traitement en parallele : "
+		<< duration_cast<milliseconds>(apres_para - avant_para).count()
+		<< " ms" << endl;
 	/*********************************************
 	* Fin de la zone du traitement en parallèle
 	*********************************************/
