@@ -21,7 +21,6 @@ using namespace std::chrono;
 const string OPTION_COULEUR_CODE = "couleur";
 const string OPTION_STATISTIQUE = "stats";
 const string REGEX = "[a-zA-Z0-9_]+";
-const int NBFICHIERS = 10;
 
 const string ESPERLUETTE = "&amp"; // &
 const string PLUS_PETIT = "&lt"; // <
@@ -253,6 +252,7 @@ int main(int argc, char * argv[])
 	cout << "Language de programmation rechercher : " << init.language_prog << endl;
 	cout << "Afficher la couleur : " << init.couleur << endl;
 	cout << "Generer le fichier de statistique : " << init.statistique << endl;
+	cout << "Exécuter le traitement du même fichier plusieurs fois (test) : " << init.test << endl;
 	cout << "Nombre de fichiers demandes : " << init.noms_fichiers.size() << endl;
 	cout << "Nombre de fichiers existants : " << init.noms_fichiers.size() << endl;
 

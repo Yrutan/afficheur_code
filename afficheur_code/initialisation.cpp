@@ -12,11 +12,14 @@ class Initialisation
 {
 	const string OPTION_COULEUR_CODE = "couleur";
 	const string OPTION_STATISTIQUE = "stats";
+	const string OPTION_TEST = "test";
+	const int NBFICHIERS = 10;
 	std::ostream &os;
 public :
 	string language_prog = "C++";
 	bool couleur = false;
 	bool statistique = false;
+	bool test = false;
 	int nb_fichiers = 0;
 
 	vector<string> noms_fichiers;
@@ -50,6 +53,10 @@ public :
 						{
 							statistique = true;
 						}
+						else if (arg.substr(1) == OPTION_TEST)
+						{
+							test = true;
+						}
 						else
 						{
 							os << "L'option : " << arg << " n'est pas valide pour ce programme." << endl;
@@ -59,10 +66,19 @@ public :
 					else // alors c'est un nom de fichier
 					{
 						nb_fichiers++;
+						// Si le fichier existe alors on l'ajoute dans notre liste de fichiers à traiter.
 						if (fichier_existe(arg))
 						{
-							// Si le fichier existe alors on l'ajoute dans notre liste de fichiers à traiter.
-							noms_fichiers.push_back(arg);
+							// Si l'option test est passée en paramètre lors de l'exécution, alors on met
+							// plusieurs fois le même fichier selon le nombre de la constante
+							if (test)
+							{
+								for (int i = 0; i < NBFICHIERS; ++i)
+									noms_fichiers.push_back(arg);
+							}
+							// Sinon on ne le met qu'une fois
+							else
+								noms_fichiers.push_back(arg);
 						}
 						else
 						{
