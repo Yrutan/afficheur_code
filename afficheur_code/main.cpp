@@ -175,58 +175,69 @@ void sequentiel(const vector<string> &noms_fichiers, const bool couleur = true, 
 }
 
 
-
+std::mutex mutex_liste;
 std::mutex mutex_write;
-void execution_parallele(const string &nom_fichier, const bool couleur = true, const bool statistique = true)
+void execution_parallele(vector<string> &noms_fichiers, const bool couleur = true, const bool statistique = true)
 {
-	ifstream lire_fichier(nom_fichier);
-	string ligne;
-	vector<string> texte_fichier;
-
-	if (lire_fichier.is_open())
+	string nom_fichier = "";
+	mutex_liste.lock();
+	// tant qu'il reste un fichier à traiter
+	while (!empty(noms_fichiers))
 	{
-		while (getline(lire_fichier, ligne))
+		// prend en charge un fichier
+		nom_fichier = noms_fichiers.back();
+		// le retire de la liste
+		noms_fichiers.pop_back();
+		// libère l'accès à la liste une fois le fichier choisi
+		mutex_liste.unlock();
+
+		ifstream lire_fichier(nom_fichier);
+		string ligne;
+		vector<string> texte_fichier;
+
+		if (lire_fichier.is_open())
 		{
-			texte_fichier.push_back(ligne);
+			while (getline(lire_fichier, ligne))
+			{
+				texte_fichier.push_back(ligne);
+			}
 		}
+		lire_fichier.close();
+
+		// doit barrer l'écriture si jamais un des threads doit écrire dans le même fichier
+		// parce qu'il aurait le même nom
+		mutex_write.lock();
+		if (statistique)
+			generer_stats(nom_fichier);
+
+		creer_fichier_web(nom_fichier, texte_fichier, couleur);
+		texte_fichier.clear();
+		mutex_write.unlock();
+
+		// Une fois le traitement terminé, il faut obtenir l'accès à la liste pour 
+		// pouvoir confirmer qu'elle n'est pas vide et choisir un fichier sans avoir de concurrence.
+		mutex_liste.lock();
 	}
-	lire_fichier.close();
-
-
-	// doit barrer l'écriture si jamais un des threads doit écrire dans le même fichier
-	// parce qu'il aurait le même nom
-	mutex_write.lock();
-
-	if (statistique)
-		generer_stats(nom_fichier);
-
-	creer_fichier_web(nom_fichier, texte_fichier, couleur);
-	texte_fichier.clear();
-
-	mutex_write.unlock();
+	// On a confirmé que la liste était vide il faut libérer l'accès à la liste
+	// pour que les autres threads puissent le savoir aussi.
+	mutex_liste.unlock();
 }
 
 void parallele(const unsigned int nombre_thread, const vector<string> &noms_fichiers, const bool couleur = true, const bool statistique = true)
 {
-	// mutex(s)
-	// suggestion : faire nombre_thread mutex (ou un seul mutex avec nombre_thread d'accès) 
-	// et faire attendre le main 
-	// quand un accès est libéré assigner la tâche suivante au thread libre.
-
-	// while tâche disponible
-	//    partir x threads
-	//    attendre qu'un ait fini
-	//    lui assigner la tâche suivante
-	//    continuer à attendre avec la boucle
-	// end while
-
-	for ( string nom_fichier : noms_fichiers)
+	vector<thread> threads;
+	// création d'un nombre de threads égals au nombre dans la variable "nombre_thread"
+	// si le nombre de fichiers à traiter est plus petit que le nombre de threads à créer
+	// alors on crée un nombre de threads égal au nombre de fichiers à traiter.
+	for (unsigned int i = 0; i < nombre_thread && i < noms_fichiers.size(); i++)
 	{
-		std::thread task(execution_parallele, nom_fichier, couleur, statistique);
-		task.join();
+		threads.push_back(std::thread(execution_parallele, noms_fichiers, couleur, statistique));
 	}
-
-
+	// On demande au programme principal d'attendre la fin des threads pour continuer (s'arrêter)
+	for (unsigned int i = 0; i < nombre_thread; ++i)
+	{
+		threads[i].join();
+	}
 }
 
 
