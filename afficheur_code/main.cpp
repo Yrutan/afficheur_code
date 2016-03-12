@@ -174,47 +174,57 @@ void sequentiel(const vector<string> &noms_fichiers, const bool couleur = true, 
 	}
 }
 
-// http://h-deb.clg.qc.ca/Sujets/Parallelisme/thread_pool.html
-class pool
-{
-   struct tache
-   {
-      virtual void execute() = 0;
-      virtual ~tache() = default;
-   };
-   template <class F>
-   class tache_impl
-      : public tache
-   {
-      F f;
-   public:
-      tache_impl(F && f)
-         : f{ move(f) }
-      {
-      }
-      void execute()
-      {
-         f();
-      }
-   };
 
+
+std::mutex mutex_write;
+void execution_parallele(const string &nom_fichier, const bool couleur = true, const bool statistique = true)
+{
+	ifstream lire_fichier(nom_fichier);
+	string ligne;
+	vector<string> texte_fichier;
+
+	if (lire_fichier.is_open())
+	{
+		while (getline(lire_fichier, ligne))
+		{
+			texte_fichier.push_back(ligne);
+		}
+	}
+	lire_fichier.close();
+
+
+	// doit barrer l'écriture si jamais un des threads doit écrire dans le même fichier
+	// parce qu'il aurait le même nom
+	mutex_write.lock();
+
+	if (statistique)
+		generer_stats(nom_fichier);
+
+	creer_fichier_web(nom_fichier, texte_fichier, couleur);
+	texte_fichier.clear();
+
+	mutex_write.unlock();
+}
 
 void parallele(const unsigned int nombre_thread, const vector<string> &noms_fichiers, const bool couleur = true, const bool statistique = true)
 {
-   pool pool_thread();
-   // mutex(s)
-   // suggestion : faire nombre_thread mutex (ou un seul mutex avec nombre_thread d'accès) 
-   // et faire attendre le main 
-   // quand un accès est libéré assigner la tâche suivante au thread libre.
+	// mutex(s)
+	// suggestion : faire nombre_thread mutex (ou un seul mutex avec nombre_thread d'accès) 
+	// et faire attendre le main 
+	// quand un accès est libéré assigner la tâche suivante au thread libre.
 
-   // while tâche disponible
-   //    partir x threads
-   //    attendre qu'un ait fini
-   //    lui assigner la tâche suivante
-   //    continuer à attendre avec la boucle
-   // end while
-   
-   
+	// while tâche disponible
+	//    partir x threads
+	//    attendre qu'un ait fini
+	//    lui assigner la tâche suivante
+	//    continuer à attendre avec la boucle
+	// end while
+
+	for ( string nom_fichier : noms_fichiers)
+	{
+		std::thread task(execution_parallele, nom_fichier, couleur, statistique);
+		task.join();
+	}
 
 
 }
@@ -242,11 +252,10 @@ int main(int argc, char * argv[])
 	* Fin d'initialisation du programme
 	*********************************************/
 
-
 	/*********************************************
 	* Début de la zone du traitement séquentiel
 	*********************************************/
-	//cout << "Debut du traitement sequentiel" << endl;
+	cout << "Debut du traitement sequentiel" << endl;
 	// begin timer
 
 	auto avant_seq = high_resolution_clock::now();
@@ -256,7 +265,7 @@ int main(int argc, char * argv[])
 	auto apres_seq = high_resolution_clock::now();
 
 	// end time
-	//cout << "Fin du traitement sequentiel" << endl;
+	cout << "Fin du traitement sequentiel" << endl;
 
 	/*********************************************
 	* Fin de la zone du traitement séquentiel
@@ -272,7 +281,7 @@ int main(int argc, char * argv[])
 	/*********************************************
 	* Début de la zone du traitement en parallèle
 	*********************************************/
-	//cout << "Debut du traitement en parallele" << endl;
+	cout << "Debut du traitement en parallele" << endl;
 	// begin timer
 
 	auto avant_para = high_resolution_clock::now();
@@ -283,7 +292,7 @@ int main(int argc, char * argv[])
 	auto apres_para = high_resolution_clock::now();
 
 	// end time
-	//cout << "Fin du traitement en parallele" << endl;
+	cout << "Fin du traitement en parallele" << endl;
 	/*********************************************
 	* Fin de la zone du traitement en parallèle
 	*********************************************/
