@@ -1,2 +1,1 @@
-Temps pris pour le traitement sequentiel : 4097 ms
-Temps pris pour le traitement en parallele : 2943 ms
+Temps pris pour le traitement sequentiel : 40522 ms

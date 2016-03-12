@@ -46,7 +46,7 @@ bool compare(const pair<string, int>&i, const pair<string, int>&j)
 	return i.second != j.second ? i.second > j.second : std::lexicographical_compare(i.first.begin(), i.first.end(), j.first.begin(), j.first.end());
 }
 
-void generer_stats(const string nom_fichier)
+void generer_stats(const string &nom_fichier)
 {
 	string pattern{ "[a-zA-Z0-9]+" };
 	regex expression{ pattern };
@@ -116,11 +116,23 @@ void ajouter_css(vector<string> &lignes)
 	}
 }
 
-void creer_fichier_web(string nom_fichier, vector<string>texte, const bool &couleur = false)
+void ecrirefichier(const string &nom_fichier, const vector<string> &texte)
+{
+	ofstream ecrire_fichier;
+	ecrire_fichier.open(nom_fichier + ".html");
+	if (ecrire_fichier.is_open())
+	{
+		for (auto it_texte = begin(texte); it_texte != end(texte); it_texte++)
+			ecrire_fichier << *it_texte << "<br>";
+	}
+	ecrire_fichier.close();
+}
+
+void parseTextToHTML(vector<string> &texte, const bool &couleur = false)
 {
 	if (!empty(texte))
 	{
-		for (string &ligne :texte)
+		for (string &ligne : texte)
 		{
 			remplacer(SPECIAL_CHAR["&"], "&", ligne);
 			remplacer(SPECIAL_CHAR["<"], "<", ligne);
@@ -133,18 +145,18 @@ void creer_fichier_web(string nom_fichier, vector<string>texte, const bool &coul
 		texte[0] = "<!DOCTYPE html><head><style>.bleu{color:blue};</style><title>Afficheur de code</title></head><pre>" + texte[0];
 		texte.back() += "</pre>";
 	}
-	ofstream ecrire_fichier;
-	ecrire_fichier.open(nom_fichier + ".html");
-	if (ecrire_fichier.is_open())
-	{
-		for (auto it_texte = begin(texte); it_texte != end(texte); it_texte++)
-			ecrire_fichier << *it_texte << "<br>";
-	}
-	ecrire_fichier.close();
+}
+
+void creer_fichier_web(const string &nom_fichier, vector<string> &texte, const bool &couleur = false)
+{
+	parseTextToHTML(texte, couleur);
+	ecrirefichier(nom_fichier, texte);
 }
 
 
-void sequentiel(const vector<string> &noms_fichiers, const bool couleur = true, const bool statistique = true)
+
+
+void sequentiel(const vector<string> &noms_fichiers, const bool &couleur = true, const bool &statistique = true)
 {
 	ifstream lire_fichier;
 	vector<string> texte_fichier;
@@ -172,8 +184,7 @@ void sequentiel(const vector<string> &noms_fichiers, const bool couleur = true, 
 
 
 std::mutex mutex_liste;
-std::mutex mutex_write;
-void execution_parallele(vector<string> &noms_fichiers, const bool couleur = true, const bool statistique = true)
+void execution_parallele(vector<string> &noms_fichiers, const bool &couleur = true, const bool &statistique = true)
 {
 	string nom_fichier = "";
 	mutex_liste.lock();
@@ -200,15 +211,11 @@ void execution_parallele(vector<string> &noms_fichiers, const bool couleur = tru
 		}
 		lire_fichier.close();
 
-		// doit barrer l'écriture si jamais un des threads doit écrire dans le même fichier
-		// parce qu'il aurait le même nom
-		mutex_write.lock();
 		if (statistique)
 			generer_stats(nom_fichier);
 
 		creer_fichier_web(nom_fichier, texte_fichier, couleur);
 		texte_fichier.clear();
-		mutex_write.unlock();
 
 		// Une fois le traitement terminé, il faut obtenir l'accès à la liste pour 
 		// pouvoir confirmer qu'elle n'est pas vide et choisir un fichier sans avoir de concurrence.
@@ -219,7 +226,7 @@ void execution_parallele(vector<string> &noms_fichiers, const bool couleur = tru
 	mutex_liste.unlock();
 }
 
-void parallele(const unsigned int nombre_thread, vector<string> &noms_fichiers, const bool couleur = true, const bool statistique = true)
+void parallele(const unsigned int nombre_thread, vector<string> &noms_fichiers, const bool &couleur = true, const bool &statistique = true)
 {
 	vector<thread> threads;
 	// création d'un nombre de threads égals au nombre dans la variable "nombre_thread"

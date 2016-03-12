@@ -149,7 +149,6 @@
     <ClCompile Include="initialisation.cpp" />
     <ClCompile Include="keywords.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="parallele.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Styles.css" />

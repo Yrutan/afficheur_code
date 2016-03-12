@@ -21,9 +21,6 @@
     <ClCompile Include="keywords.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="parallele.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="initialisation.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>

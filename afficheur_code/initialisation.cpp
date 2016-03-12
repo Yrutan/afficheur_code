@@ -13,7 +13,7 @@ class Initialisation
 	const string OPTION_COULEUR_CODE = "couleur";
 	const string OPTION_STATISTIQUE = "stats";
 	const string OPTION_TEST = "test";
-	const int NBFICHIERS = 10;
+	const int NBFICHIERS = 100;
 	std::ostream &os;
 public :
 	string language_prog = "C++";
