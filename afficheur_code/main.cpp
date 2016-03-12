@@ -223,7 +223,7 @@ void execution_parallele(vector<string> &noms_fichiers, const bool couleur = tru
 	mutex_liste.unlock();
 }
 
-void parallele(const unsigned int nombre_thread, const vector<string> &noms_fichiers, const bool couleur = true, const bool statistique = true)
+void parallele(const unsigned int nombre_thread, vector<string> &noms_fichiers, const bool couleur = true, const bool statistique = true)
 {
 	vector<thread> threads;
 	// création d'un nombre de threads égals au nombre dans la variable "nombre_thread"
@@ -234,7 +234,7 @@ void parallele(const unsigned int nombre_thread, const vector<string> &noms_fich
 		threads.push_back(std::thread(execution_parallele, noms_fichiers, couleur, statistique));
 	}
 	// On demande au programme principal d'attendre la fin des threads pour continuer (s'arrêter)
-	for (unsigned int i = 0; i < nombre_thread; ++i)
+	for (unsigned int i = 0; i < nombre_thread && i < noms_fichiers.size(); ++i)
 	{
 		threads[i].join();
 	}
