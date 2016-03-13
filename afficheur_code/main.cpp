@@ -236,7 +236,7 @@ void parallele(const unsigned int nombre_thread, vector<string> &noms_fichiers, 
 	{
 		threads.push_back(std::thread(execution_parallele, noms_fichiers, couleur, statistique));
 	}
-	// On demande au programme principal d'attendre la fin des threads pour continuer (s'arrêter)
+	// On demande au programme principal d'attendre la fin des threads pour continuer
 	for (unsigned int i = 0; i < nombre_thread && i < noms_fichiers.size(); ++i)
 	{
 		threads[i].join();
