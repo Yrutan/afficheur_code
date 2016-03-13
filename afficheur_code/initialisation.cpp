@@ -1,12 +1,15 @@
 
+/*************************************************************************
+
+Fait par Antoine Latendresse, Léa Kelly et Simon Roy
+
+*************************************************************************/
+
 #include <string>
 #include <vector>
 #include <iostream>
 #include <fstream>
 using namespace std;
-
-
-
 
 class Initialisation
 {
@@ -88,7 +91,7 @@ public :
 				}
 			}
 		}
-		// fin de la gestion des paranètres
+		// fin de la gestion des paramètres
 	}
 
 };
